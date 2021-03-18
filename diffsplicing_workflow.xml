@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<watchdog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="watchdog.xsd" watchdogBase="/home/proj/software/watchdog/">
+	<settings>
+		<constants>
+			<const name="WATCHDOG">/home/proj/software/watchdog</const>
+			<const name="BASE">/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow</const>
+			<const name="INPUT_TABLE">${BASE}/sample.table</const>
+			<const name="LOGDIR">${BASE}/LOG</const>
+			<const name="INDEXDIR">/mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103</const>
+			<const name="SAMPLEDIR">${BASE}/samples</const>
+			<const name="GTF">/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf</const>
+			<const name="FASTA">/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa</const>
+			<const name="NTHREAD">12</const>
+		</constants>
+
+
+		<executors>
+			<sge name="cluster_low" default="true" maxRunning="8" slots="1" memory="80000M" />  <!--queue="dell.q"-->
+			<sge name="indexing" maxRunning="1" slots="1" memory="160000M" queue="dell256.q"/>
+			<sge name="emp" maxRunning="5" slots="1" memory="70000M"/>
+			<!-- not working yet with this image (wrong shebang as no /bin/bash in image...) -->
+			<!-- <sge name="cluster_low_podman" default="true" maxRunning="8" slots="1" memory="2048M" queue="hpclient.q" container="docker" shebang="#!/usr/bin/env bash"/> -->	
+		</executors>
+
+
+		<processBlock>
+			<processInput name="input_block" />
+			<processTable name="table" table="${INPUT_TABLE}"/>
+		</processBlock>
+	</settings>
+	<!-- TODO: modify -->
+	<tasks mail="hadziahmetovic@cip.ifi.lmu.de">
+		<!-- simple test task -->
+		<scriptCallerTask id="1" name="index" executor="indexing"> <!--notify="enabled"-->
+			<parameter>
+				<script>${BASE}/config/run_index.sh</script>
+				<config>${BASE}/config/index.config</config>
+					<param>index:${INDEXDIR}</param>
+					<param>gtf:${GTF}</param>
+					<param>fasta:${FASTA}</param>
+					<param>nthread:${NTHREAD}</param>
+					<param>log:${LOGDIR}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/indexing.out</stdout>
+				<stderr>${LOGDIR}/indexing.err</stderr>
+			</streams>
+		</scriptCallerTask>
+
+		<scriptCallerTask id="2" name="star" executor="star" processBlock="table">
+			<parameter>
+				<script>${BASE}/config/run_star.sh</script>
+				<config>${BASE}/config/star.config</config>
+					<param>index:${INDEXDIR}</param>
+					<param>pdata:{$pdata}</param>
+					<param>samples:{$samples}</param>
+					<param>out:{$out}</param>
+					<param>nthread:${NTHREAD}</param>
+					<param>log:${LOGDIR}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/star_{$label}.out</stdout>
+				<stderr>${LOGDIR}/star_{$label}.err</stderr>
+			</streams>
+		</scriptCallerTask>
+
+		<scriptCallerTask id="3" name="hisat" executor="hisat" processBlock="table">
+			<parameter>
+				<script>${BASE}/config/run_hisat.sh</script>
+					<param>index:${INDEXDIR}</param>
+					<param>pdata:{$pdata}</param>
+					<param>samples:{$samples}</param>
+					<param>out:{$out}</param>
+					<param>nthread:${NTHREAD}</param>
+					<param>log:${LOGDIR}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/hisat2_{$label}.out</stdout>
+				<stderr>${LOGDIR}/hisat2_{$label}.err</stderr>
+			</streams>
+		</scriptCallerTask>
+
+		<scriptCallerTask id="4" name="kallisto" executor="kallisto" processBlock="table">
+			<parameter>
+				<script>${BASE}/config/run_kallisto.sh</script>
+				<config>${BASE}/config/kallisto.config</config>
+					<param>index:${INDEXDIR}</param>
+					<param>pdata:{$pdata}</param>
+					<param>samples:{$samples}</param>
+					<param>out:{$out}</param>
+					<param>nthread:${NTHREAD}</param>
+					<param>log:${LOGDIR}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/kallisto_{$label}.out</stdout>
+				<stderr>${LOGDIR}/kallisto_{$label}.err</stderr>
+			</streams>
+		</scriptCallerTask>
+
+		<scriptCallerTask id="5" name="salmon" executor="salmon" processBlock="table">
+			<parameter>
+				<script>${BASE}/config/run_salmon.sh</script>
+					<param>index:${INDEXDIR}</param>
+					<param>pdata:{$pdata}</param>
+					<param>samples:{$samples}</param>
+					<param>out:{$out}</param>
+					<param>nthread:${NTHREAD}</param>
+					<param>log:${LOGDIR}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/salmon_{$label}.out</stdout>
+				<stderr>${LOGDIR}/salmon_{$label}.err</stderr>
+			</streams>
+		</scriptCallerTask>
+
+		<!-- scriptCallerTask id="2" name="convert" processBlock="table">
+			<parameter>
+				<script>${BASE}/test_data/testCommand.sh</script>
+				<param>convert</param>
+				<param>label:{$label}</param>
+				<param>sample:{$label}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/convert.{$label}.out</stdout>
+				<stderr>${LOGDIR}/convert.{$label}.err</stderr>
+			</streams>
+		</scriptCallerTask -->
+
+		<!-- task which generates sub-tasks for each entry in samples.csv -->
+		<!-- scriptCallerTask id="3" name="mapping_star" processBlock="table">
+			<dependencies>
+				<depends separate="true">1</depends>
+			</dependencies>
+			<parameter>
+				<script>${BASE}/config/run_mapping.sh</script>
+				<param>sample:{$label}</param>
+				<param>readFilesIn:{$fw} {$rw}</param>
+				<param>outFileNamePrefix:/home/data/out/STAR/{$label}</param>
+				<param>read2:{$rw}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/mapping_star.{$label}.out</stdout>
+				<stderr>${LOGDIR}/mapping_star.{$label}.err</stderr>
+			</streams>
+		</scriptCallerTask -->
+	</tasks>
+</watchdog>

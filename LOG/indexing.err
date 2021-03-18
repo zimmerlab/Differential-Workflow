@@ -1,0 +1,1164 @@
++ echo --taxid 9606 --organism homo_sapiens --nthread 6 --star --hisat2 --salmon --dexseq --kallisto --empires --r --all --index /mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103 --log /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG --gtf /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf --fasta /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa
++ params=("$@")
++ set -o errexit -o pipefail -o noclobber -o nounset
++ getopt --test
++ [[ 4 -ne 4 ]]
++ OPTIONS=
++ LONGOPTS=gtf:,fasta:,organism:,taxid:,nthread:,empires,hisat2,star,r,kallisto,salmon,dexseq,index:,all,log:
+++ getopt --options= --longoptions=gtf:,fasta:,organism:,taxid:,nthread:,empires,hisat2,star,r,kallisto,salmon,dexseq,index:,all,log: --name /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/config/run_index.sh -- --taxid 9606 --organism homo_sapiens --nthread 6 --star --hisat2 --salmon --dexseq --kallisto --empires --r --all --index /mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103 --log /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG --gtf /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf --fasta /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa
++ PARSED=' --taxid '\''9606'\'' --organism '\''homo_sapiens'\'' --nthread '\''6'\'' --star --hisat2 --salmon --dexseq --kallisto --empires --r --all --index '\''/mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103'\'' --log '\''/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG'\'' --gtf '\''/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf'\'' --fasta '\''/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa'\'' --'
++ [[ 0 -ne 0 ]]
++ eval set -- ' --taxid '\''9606'\'' --organism '\''homo_sapiens'\'' --nthread '\''6'\'' --star --hisat2 --salmon --dexseq --kallisto --empires --r --all --index '\''/mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103'\'' --log '\''/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG'\'' --gtf '\''/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf'\'' --fasta '\''/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa'\'' --'
+++ set -- --taxid 9606 --organism homo_sapiens --nthread 6 --star --hisat2 --salmon --dexseq --kallisto --empires --r --all --index /mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103 --log /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG --gtf /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf --fasta /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa --
++ gtf=-
++ fasta=-
++ index=-
++ empires=n
++ all=n
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ empires=y
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ all=y
++ shift
++ true
++ case "$1" in
++ index=/mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103
++ shift 2
++ true
++ case "$1" in
++ log=/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG
++ shift 2
++ true
++ case "$1" in
++ gtf=/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf
++ shift 2
++ true
++ case "$1" in
++ fasta=/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa
++ shift 2
++ true
++ case "$1" in
++ shift
++ break
++ [[ 0 -ne 0 ]]
++ [[ y = \y ]]
++ podman run --pull=always -v /mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103:/home/data/indices -v /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf:/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf -v /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa:/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa -v /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG:/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG --rm hadziahmetovic/generate-indices:latest /home/scripts/generate_indices.sh --taxid 9606 --organism homo_sapiens --nthread 6 --star --hisat2 --salmon --dexseq --kallisto --empires --r --all --index /mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103 --log /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG --gtf /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf --fasta /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa
+Trying to pull registry.opensuse.org/hadziahmetovic/generate-indices:latest...
+  name unknown
+Trying to pull docker.io/hadziahmetovic/generate-indices:latest...
+Getting image source signatures
+Copying blob sha256:56da78ce36e97a8ba1f860575bb1422d1cb6ab4dade70b06ddf1651302dde955
+Copying blob sha256:3d7e70f8075e6cea9459e3b3c81f442e13eebe7eefa324dde68d126539310f44
+Copying blob sha256:47acf42458030f8c03b000c46693d92320cb17582219b9a8f1b2290b21f6f903
+Copying blob sha256:255d4ff2d0d5d8f20a9c638b5fe76bb29e9fcbd24d3c015756ac5c986222d80e
+Copying blob sha256:1e3e05c75a8c753a73c39efaa81c748bc46d32e2c91e8786771b9149fa941005
+Copying blob sha256:7b52cb235aa614b3f1102410a8f8f798834ba173996da61a8bfe735cb9249c39
+Copying blob sha256:d429d66ef0deee2d2a8956c951edf73746160865503808d967e96fdecbeca9ad
+Copying blob sha256:6d87a9bad0ddec366fb42d03428208c945f535c2993a21ab7e746ef36200050d
+Copying blob sha256:5a1a0653d4a449fa606aa55dc0e24e511c2c37c96f95c1028924165f344fea16
+Copying blob sha256:3e05a4a23083798bb720a7845fcc91352f1d33fbc8b061d037e5df0b197d7e34
+Copying blob sha256:225a3c9a8e2ae5b6f6ec61b4cded07eba3b82b2587760e485c22a783c21cd8b0
+Copying config sha256:03bddc263cbe1943d47e4308ffbda6b916b64e07146788b6b892a602ae59c85e
+Writing manifest to image destination
+Storing signatures
++ set -o errexit -o pipefail -o noclobber -o nounset
++ getopt --test
++ [[ 4 -ne 4 ]]
++ OPTIONS=
++ LONGOPTS=gtf:,fasta:,organism:,taxid:,nthread:,hisat2,star,kallisto,salmon,r,dexseq,index:,empires,all,log:
+++ getopt --options= --longoptions=gtf:,fasta:,organism:,taxid:,nthread:,hisat2,star,kallisto,salmon,r,dexseq,index:,empires,all,log: --name /home/scripts/generate_indices.sh -- --taxid 9606 --organism homo_sapiens --nthread 6 --star --hisat2 --salmon --dexseq --kallisto --empires --r --all --index /mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103 --log /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG --gtf /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf --fasta /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa
++ PARSED=' --taxid '\''9606'\'' --organism '\''homo_sapiens'\'' --nthread '\''6'\'' --star --hisat2 --salmon --dexseq --kallisto --empires --r --all --index '\''/mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103'\'' --log '\''/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG'\'' --gtf '\''/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf'\'' --fasta '\''/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa'\'' --'
++ [[ 0 -ne 0 ]]
++ eval set -- ' --taxid '\''9606'\'' --organism '\''homo_sapiens'\'' --nthread '\''6'\'' --star --hisat2 --salmon --dexseq --kallisto --empires --r --all --index '\''/mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103'\'' --log '\''/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG'\'' --gtf '\''/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf'\'' --fasta '\''/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa'\'' --'
+++ set -- --taxid 9606 --organism homo_sapiens --nthread 6 --star --hisat2 --salmon --dexseq --kallisto --empires --r --all --index /mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103 --log /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG --gtf /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf --fasta /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa --
++ gtf=-
++ fasta=-
++ organism=-
++ taxid=-
++ nthread=4
++ hisat2=n
++ star=n
++ kallisto=n
++ salmon=n
++ r=n
++ dexseq=n
++ true
++ case "$1" in
++ taxid=9606
++ shift 2
++ true
++ case "$1" in
++ organism=homo_sapiens
++ shift 2
++ true
++ case "$1" in
++ nthread=6
++ shift 2
++ true
++ case "$1" in
++ star=y
++ shift
++ true
++ case "$1" in
++ hisat2=y
++ shift
++ true
++ case "$1" in
++ salmon=y
++ shift
++ true
++ case "$1" in
++ dexseq=y
++ shift
++ true
++ case "$1" in
++ kallisto=y
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ r=y
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ shift
++ true
++ case "$1" in
++ log=/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG
++ shift 2
++ true
++ case "$1" in
++ gtf=/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf
++ shift 2
++ true
++ case "$1" in
++ fasta=/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa
++ shift 2
++ true
++ case "$1" in
++ shift
++ break
++ [[ 0 -ne 0 ]]
++ outdir=/home/data/indices
++ echo 'organism:	homo_sapiens'
++ echo 'taxid:	9606'
++ echo 'gtf:	/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf'
++ echo 'fasta:	/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa'
++ [[ y = \y ]]
+++ date +%Y/%m/%d-%H:%M:%S
++ echo '
+[INFO] [generate_indices.sh] [HISAT2] [2021/03/16-16:44:48] Start: create index'
++ mkdir -p /home/data/indices/hisat2/tmp
++ hisatTMP=/home/data/indices/hisat2/tmp
++ wid=12
++ /usr/bin/time -v python3 /home/software/hisat2-2.2.1/extract_splice_sites.py /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf
+++ date +%s
++ watch pidstat -dru -hl '>>' /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/hisat_index-1615913088.pidstat
+	Command being timed: "python3 /home/software/hisat2-2.2.1/extract_splice_sites.py /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf"
+	User time (seconds): 27.91
+	System time (seconds): 0.71
+	Percent of CPU this job got: 98%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:29.09
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 405188
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 5
+	Minor (reclaiming a frame) page faults: 108610
+	Voluntary context switches: 142
+	Involuntary context switches: 37
+	Swaps: 0
+	File system inputs: 2564160
+	File system outputs: 17360
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
++ /usr/bin/time -v python3 /home/software/hisat2-2.2.1/extract_exons.py /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf
+	Command being timed: "python3 /home/software/hisat2-2.2.1/extract_exons.py /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf"
+	User time (seconds): 28.95
+	System time (seconds): 0.50
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:29.61
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 422012
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 114912
+	Voluntary context switches: 141
+	Involuntary context switches: 37
+	Swaps: 0
+	File system inputs: 16
+	File system outputs: 14536
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
++ /usr/bin/time -v python3 /home/software/hisat2-2.2.1/hisat2-build -p 8 --ss /home/data/indices/hisat2/tmp/tmp.ss --exon /home/data/indices/hisat2/tmp/tmp.exon /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa /home/data/indices/hisat2/INDEX
+Settings:
+  Output files: "/home/data/indices/hisat2/INDEX.*.ht2"
+  Line rate: 7 (line is 128 bytes)
+  Lines per side: 1 (side is 128 bytes)
+  Offset rate: 4 (one in 16)
+  FTable chars: 10
+  Strings: unpacked
+  Local offset rate: 3 (one in 8)
+  Local fTable chars: 6
+  Local sequence length: 57344
+  Local sequence overlap between two consecutive indexes: 1024
+  Endianness: little
+  Actual local endianness: little
+  Sanity checking: disabled
+  Assertions: disabled
+  Random seed: 0
+  Sizeofs: void*:8, int:4, long:8, size_t:8
+Input files DNA, FASTA:
+  /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa
+Reading reference sizes
+  Time reading reference sizes: 00:00:36
+Calculating joined length
+Writing header
+Reserving space for joined string
+Joining reference sequences
+  Time to join reference sequences: 00:00:13
+  Time to read SNPs and splice sites: 00:00:02
+Generation 0 (2946249401 -> 2946249401 nodes, 0 ranks)
+COUNTED NEW NODES: 2
+COUNTED TEMP NODES: 0
+RESIZED NODES: 10
+RESIZED NODES: 0
+MADE NEW NODES: 3
+Generation 1 (2946627978 -> 2946627978 nodes, 0 ranks)
+COUNTED NEW NODES: 2
+COUNTED TEMP NODES: 0
+RESIZED NODES: 10
+RESIZED NODES: 0
+MADE NEW NODES: 4
+Generation 2 (2947385600 -> 2947385600 nodes, 0 ranks)
+COUNTED NEW NODES: 1
+COUNTED TEMP NODES: 0
+RESIZED NODES: 11
+RESIZED NODES: 0
+MADE NEW NODES: 3
+Generation 3 (2948901868 -> 2948901868 nodes, 0 ranks)
+BUILT FROM_INDEX: 14
+COUNTED NEW NODES: 2
+COUNTED TEMP NODES: 0
+RESIZED NODES: 11
+RESIZED NODES: 0
+MADE NEW NODES: 3
+RESIZE NODES: 27
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 6
+10 381885589
+17 415733306
+47 379402439
+55 355662479
+18 362169321
+49 375226415
+16 390909376
+154 290950666
+FINISHED RECURSIVE SORTS: 44
+SORT NODES: 51
+MERGE, UPDATE RANK: 53
+Generation 4 (2951939591 -> 2951265397 nodes, 1135826538 ranks)
+ALLOCATE FROM_TABLE: 39
+COUNT NUMBER IN EACH BIN: 2
+FINISHED FIRST ROUND: 9
+44 369843760
+44 369817544
+44 370030627
+44 369898827
+44 369767790
+44 369625657
+44 369630451
+44 362650741
+FINISHED RECURSIVE SORTS: 31
+BUILD TABLE: 42
+BUILD INDEX: 15
+COUNTED NEW NODES: 12
+COUNTED TEMP NODES: 0
+RESIZED NODES: 10
+RESIZED NODES: 0
+MADE NEW NODES: 35
+MERGEUPDATERANK: 66
+TOTAL TIME: 219
+Generation 5 (2954533525 -> 2950947870 nodes, 2572314064 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 2
+FINISHED FIRST ROUND: 9
+44 369800767
+44 369769238
+44 369982666
+44 369853688
+44 369723621
+44 369587931
+44 369600457
+44 362629502
+FINISHED RECURSIVE SORTS: 30
+BUILD TABLE: 41
+BUILD INDEX: 21
+COUNTED NEW NODES: 4
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 11
+MERGEUPDATERANK: 23
+TOTAL TIME: 100
+Generation 6 (2951314412 -> 2951119440 nodes, 2801588825 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 10
+44 369828387
+44 369784405
+44 370020574
+44 369875863
+44 369743604
+44 369599700
+44 369617469
+44 362649438
+FINISHED RECURSIVE SORTS: 28
+BUILD TABLE: 39
+BUILD INDEX: 14
+COUNTED NEW NODES: 2
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 4
+MERGEUPDATERANK: 15
+TOTAL TIME: 74
+Generation 7 (2951358169 -> 2951257185 nodes, 2868579604 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 2
+FINISHED FIRST ROUND: 6
+44 369854955
+44 369791869
+44 370057180
+44 369887156
+44 369761389
+44 369606618
+44 369629202
+44 362668816
+FINISHED RECURSIVE SORTS: 29
+BUILD TABLE: 37
+BUILD INDEX: 14
+COUNTED NEW NODES: 1
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 3
+MERGEUPDATERANK: 13
+TOTAL TIME: 68
+Generation 8 (2951470718 -> 2951385411 nodes, 2899275245 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 2
+FINISHED FIRST ROUND: 6
+44 369878393
+44 369794671
+44 370095605
+44 369893215
+44 369780967
+44 369614559
+44 369638117
+44 362689884
+FINISHED RECURSIVE SORTS: 28
+BUILD TABLE: 36
+BUILD INDEX: 20
+COUNTED NEW NODES: 2
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 2
+MERGEUPDATERANK: 12
+TOTAL TIME: 72
+Generation 9 (2951591346 -> 2951508691 nodes, 2920757810 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 2
+FINISHED FIRST ROUND: 6
+44 369892531
+44 369795551
+44 370132263
+44 369898611
+44 369808956
+44 369622409
+44 369646428
+44 362711942
+FINISHED RECURSIVE SORTS: 29
+BUILD TABLE: 37
+BUILD INDEX: 14
+COUNTED NEW NODES: 1
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 3
+MERGEUPDATERANK: 11
+TOTAL TIME: 66
+Generation 10 (2951684839 -> 2951603717 nodes, 2933632568 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 2
+FINISHED FIRST ROUND: 6
+44 369901961
+44 369794269
+44 370146673
+44 369902556
+44 369848174
+44 369627545
+44 369649003
+44 362733536
+FINISHED RECURSIVE SORTS: 30
+BUILD TABLE: 38
+BUILD INDEX: 15
+COUNTED NEW NODES: 1
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 2
+MERGEUPDATERANK: 11
+TOTAL TIME: 67
+Generation 11 (2951766145 -> 2951691298 nodes, 2937654142 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 2
+FINISHED FIRST ROUND: 6
+44 369909222
+44 369793842
+44 370146916
+44 369905330
+44 369911994
+44 369630091
+44 369650174
+44 362743729
+FINISHED RECURSIVE SORTS: 29
+BUILD TABLE: 37
+BUILD INDEX: 14
+COUNTED NEW NODES: 1
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 3
+MERGEUPDATERANK: 10
+TOTAL TIME: 65
+Generation 12 (2951860790 -> 2951788713 nodes, 2939064644 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 2
+FINISHED FIRST ROUND: 6
+44 369909224
+44 369793842
+44 370139719
+44 369907607
+44 370009504
+44 369632478
+44 369649892
+44 362746447
+FINISHED RECURSIVE SORTS: 29
+BUILD TABLE: 37
+BUILD INDEX: 18
+COUNTED NEW NODES: 1
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 2
+MERGEUPDATERANK: 11
+TOTAL TIME: 69
+Generation 13 (2952014304 -> 2951968987 nodes, 2939890131 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 6
+44 369908335
+44 369793842
+44 370139455
+44 369908868
+44 370189179
+44 369630538
+44 369648486
+44 362750284
+FINISHED RECURSIVE SORTS: 29
+BUILD TABLE: 36
+BUILD INDEX: 15
+COUNTED NEW NODES: 1
+COUNTED TEMP NODES: 0
+RESIZED NODES: 10
+RESIZED NODES: 0
+MADE NEW NODES: 3
+MERGEUPDATERANK: 10
+TOTAL TIME: 75
+Generation 14 (2952221809 -> 2952167387 nodes, 2940541795 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 2
+FINISHED FIRST ROUND: 6
+44 369908335
+44 369793842
+44 370146348
+44 369908868
+44 370377537
+44 369630538
+44 369645983
+44 362755936
+FINISHED RECURSIVE SORTS: 30
+BUILD TABLE: 38
+BUILD INDEX: 18
+COUNTED NEW NODES: 2
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 2
+MERGEUPDATERANK: 11
+TOTAL TIME: 71
+Generation 15 (2952468012 -> 2952407561 nodes, 2941259180 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 7
+44 369908335
+44 369793842
+44 370146348
+44 369908868
+44 370618526
+44 369630538
+44 369645983
+44 362755121
+FINISHED RECURSIVE SORTS: 29
+BUILD TABLE: 37
+BUILD INDEX: 14
+COUNTED NEW NODES: 1
+COUNTED TEMP NODES: 0
+RESIZED NODES: 11
+RESIZED NODES: 0
+MADE NEW NODES: 2
+MERGEUPDATERANK: 11
+TOTAL TIME: 76
+Generation 16 (2952610457 -> 2952561211 nodes, 2941907105 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 7
+44 369908335
+44 369793842
+44 370146348
+44 369908868
+44 370772176
+44 369630538
+44 369645983
+44 362755121
+FINISHED RECURSIVE SORTS: 29
+BUILD TABLE: 37
+BUILD INDEX: 15
+COUNTED NEW NODES: 1
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 2
+MERGEUPDATERANK: 11
+TOTAL TIME: 66
+Generation 17 (2952561211 -> 2952560535 nodes, 2942378646 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 7
+44 369908335
+44 369793842
+44 370146348
+44 369908868
+44 370771500
+44 369630538
+44 369645983
+44 362755121
+FINISHED RECURSIVE SORTS: 29
+BUILD TABLE: 37
+BUILD INDEX: 14
+COUNTED NEW NODES: 2
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 2
+MERGEUPDATERANK: 11
+TOTAL TIME: 66
+Generation 18 (2952560535 -> 2952560535 nodes, 2943292845 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 7
+44 369908335
+44 369793842
+44 370146348
+44 369908868
+44 370771500
+44 369630538
+44 369645983
+44 362755121
+FINISHED RECURSIVE SORTS: 29
+BUILD TABLE: 37
+BUILD INDEX: 14
+COUNTED NEW NODES: 1
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 3
+MERGEUPDATERANK: 11
+TOTAL TIME: 66
+Generation 19 (2952560535 -> 2952560535 nodes, 2944733598 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 7
+44 369908335
+44 369793842
+44 370146348
+44 369908868
+44 370771500
+44 369630538
+44 369645983
+44 362755121
+FINISHED RECURSIVE SORTS: 30
+BUILD TABLE: 38
+BUILD INDEX: 16
+COUNTED NEW NODES: 1
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 2
+MERGEUPDATERANK: 11
+TOTAL TIME: 68
+Generation 20 (2952560535 -> 2952560535 nodes, 2947355038 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 6
+44 369908335
+44 369793842
+44 370146348
+44 369908868
+44 370771500
+44 369630538
+44 369645983
+44 362755121
+FINISHED RECURSIVE SORTS: 29
+BUILD TABLE: 36
+BUILD INDEX: 15
+COUNTED NEW NODES: 1
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 2
+MERGEUPDATERANK: 11
+TOTAL TIME: 65
+Generation 21 (2952560535 -> 2952560535 nodes, 2952190463 ranks)
+ALLOCATE FROM_TABLE: 0
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 7
+44 369908335
+44 369793842
+44 370146348
+44 369908868
+44 370771500
+44 369630538
+44 369645983
+44 362755121
+FINISHED RECURSIVE SORTS: 30
+BUILD TABLE: 38
+BUILD INDEX: 15
+COUNTED NEW NODES: 1
+COUNTED TEMP NODES: 0
+RESIZED NODES: 0
+RESIZED NODES: 0
+MADE NEW NODES: 2
+MERGEUPDATERANK: 10
+TOTAL TIME: 66
+Generation 22 (2952560535 -> 2952560535 nodes, 2952560535 ranks)
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 7
+44 369908335
+44 369793842
+44 370146348
+44 369908868
+44 370771500
+44 369630538
+44 369645983
+44 362755121
+FINISHED RECURSIVE SORTS: 28
+Generating edges... 
+NODE.TO -> GENOME POS: 7
+BUILD FROM_INDEX 15
+COUNTED NEW EDGES: 5
+MADE NEW EDGES: 16
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 1
+33 109029688
+45 110735252
+44 110603112
+54 108292448
+37 110156278
+40 109538488
+49 107592156
+50 105586769
+FINISHED RECURSIVE SORTS: 8
+COUNT NUMBER IN EACH BIN: 0
+FINISHED FIRST ROUND: 1
+43 76244331
+31 77066395
+38 76421610
+35 75162537
+64 74523740
+69 76805842
+31 73142029
+41 72921366
+FINISHED RECURSIVE SORTS: 5
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 1
+45 76149966
+43 76763298
+47 76976816
+42 75214029
+34 76833316
+38 75054636
+51 74412588
+52 73434096
+FINISHED RECURSIVE SORTS: 5
+COUNT NUMBER IN EACH BIN: 0
+FINISHED FIRST ROUND: 2
+63 110463920
+53 110020584
+46 111640514
+40 109359880
+36 108835913
+39 110436211
+43 108252720
+32 105271422
+FINISHED RECURSIVE SORTS: 8
+SORTED NEW EDGES: 42
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 8
+44 369098752
+44 369098752
+44 369098752
+44 369098752
+44 369098752
+44 369098752
+44 369098752
+44 368869271
+FINISHED RECURSIVE SORTS: 28
+RE-SORTED NODES: 48
+PROCESS EDGES: 10
+REMOVE Y: 4
+COUNT NUMBER IN EACH BIN: 1
+FINISHED FIRST ROUND: 2
+45 377512017
+44 369185508
+44 369150276
+44 369216718
+44 369142989
+44 369131832
+44 369111439
+43 360491172
+FINISHED RECURSIVE SORTS: 20
+SORT, Make index: 47
+TOTAL: 194
+Allocating ftab, absorbFtab
+Entering GFM loop
+Exited GFM loop
+fchr[A]: 0
+fchr[C]: 871534191
+fchr[G]: 1473822041
+fchr[T]: 2078660786
+fchr[$]: 2952941950
+Exiting GFM::buildToDisk()
+Returning from initFromVector
+Wrote 1821417463 bytes to primary GFM file: /home/data/indices/hisat2/INDEX.1.ht2
+Wrote 738140140 bytes to secondary GFM file: /home/data/indices/hisat2/INDEX.2.ht2
+Re-opening _in1 and _in2 as input streams
+Returning from GFM constructor
+Returning from initFromVector
+Wrote 1752339293 bytes to primary GFM file: /home/data/indices/hisat2/INDEX.5.ht2
+Wrote 750348056 bytes to secondary GFM file: /home/data/indices/hisat2/INDEX.6.ht2
+Re-opening _in5 and _in5 as input streams
+Returning from HGFM constructor
+Headers:
+    len: 2945849067
+    gbwtLen: 2952941951
+    nodes: 2952560534
+    sz: 1472924534
+    gbwtSz: 1476470976
+    lineRate: 7
+    offRate: 4
+    offMask: 0xfffffff0
+    ftabChars: 10
+    eftabLen: 0
+    eftabSz: 0
+    ftabLen: 1048577
+    ftabSz: 4194308
+    offsLen: 184535034
+    offsSz: 738140136
+    lineSz: 128
+    sideSz: 128
+    sideGbwtSz: 104
+    sideGbwtLen: 208
+    numSides: 14196837
+    numLines: 14196837
+    gbwtTotLen: 1817195136
+    gbwtTotSz: 1817195136
+    reverse: 0
+    linearFM: No
+Total time for call to driver() for forward index: 01:22:31
+	Command being timed: "python3 /home/software/hisat2-2.2.1/hisat2-build -p 8 --ss /home/data/indices/hisat2/tmp/tmp.ss --exon /home/data/indices/hisat2/tmp/tmp.exon /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa /home/data/indices/hisat2/INDEX"
+	User time (seconds): 14087.70
+	System time (seconds): 540.70
+	Percent of CPU this job got: 295%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:22:31
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 162656580
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 3
+	Minor (reclaiming a frame) page faults: 168327956
+	Voluntary context switches: 4579513
+	Involuntary context switches: 18041
+	Swaps: 0
+	File system inputs: 167315904
+	File system outputs: 172474832
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
++ kill -15 12
++ rm /home/data/indices/hisat2/tmp/tmp.ss
++ rm /home/data/indices/hisat2/tmp/tmp.exon
++ rm -r /home/data/indices/hisat2/tmp
+++ date +%Y/%m/%d-%H:%M:%S
++ echo '[INFO] [generate_indices.sh] [HISAT2] [2021/03/16-18:08:18] End: create index
+'
++ [[ y = \y ]]
+++ date +%Y/%m/%d-%H:%M:%S
++ echo '
+[INFO] [generate_indices.sh] [STAR] [2021/03/16-18:08:18] Start: generate STAR index...'
++ overhang=99
++ mkdir -p /home/data/indices/STAR/99
++ wid=8014
++ /usr/bin/time -v /home/software/STAR/bin/Linux_x86_64_static/STAR --runMode genomeGenerate --runThreadN 6 --genomeDir /home/data/indices/STAR/ --genomeFastaFiles /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa --sjdbGTFfile /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf --sjdbOverhang 99
+++ date +%s
++ watch pidstat -dru -hl '>>' /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/star_index-1615918098.pidstat
+!!!!! WARNING: Could not move Log.out file from ./Log.out into /home/data/indices/STAR/Log.out. Will keep ./Log.out
+
+	Command being timed: "/home/software/STAR/bin/Linux_x86_64_static/STAR --runMode genomeGenerate --runThreadN 6 --genomeDir /home/data/indices/STAR/ --genomeFastaFiles /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa --sjdbGTFfile /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf --sjdbOverhang 99"
+	User time (seconds): 13385.67
+	System time (seconds): 106.27
+	Percent of CPU this job got: 320%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:10:03
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 36871396
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 2
+	Minor (reclaiming a frame) page faults: 716380
+	Voluntary context switches: 1981653
+	Involuntary context switches: 13142
+	Swaps: 0
+	File system inputs: 92067864
+	File system outputs: 150344592
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
++ kill -15 8014
+++ date +%Y/%m/%d-%H:%M:%S
++ echo '
+[INFO] [generate_indices.sh] [STAR] [2021/03/16-19:18:22] End: generate STAR index...'
++ [[ y = \y ]]
+++ date +%Y/%m/%d-%H:%M:%S
++ echo '
+[INFO] [generate_indices.sh] [DEXSeq] [2021/03/16-19:18:22] Start: process GTF-File'
++ mkdir -p /home/data/indices/dexseq/
++ wid=13837
++ /usr/bin/time -v /usr/bin/python3 /home/scripts/DEXSeq/dexseq_prepare_annotation.py --aggregate=no /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf /home/data/indices/dexseq/annot.noaggregate.gtf
+++ date +%s
++ watch pidstat -dru -hl '>>' /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/dexseq_index-1615922302.pidstat
+	Command being timed: "/usr/bin/python3 /home/scripts/DEXSeq/dexseq_prepare_annotation.py --aggregate=no /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf /home/data/indices/dexseq/annot.noaggregate.gtf"
+	User time (seconds): 206.59
+	System time (seconds): 5.87
+	Percent of CPU this job got: 103%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:26.15
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1198924
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 34
+	Minor (reclaiming a frame) page faults: 701168
+	Voluntary context switches: 2378
+	Involuntary context switches: 278
+	Swaps: 0
+	File system inputs: 92328
+	File system outputs: 268800
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
++ /usr/bin/time -v /usr/bin/python3 /home/scripts/DEXSeq/dexseq_prepare_annotation.py /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf /home/data/indices/dexseq/annot.gtf
+	Command being timed: "/usr/bin/python3 /home/scripts/DEXSeq/dexseq_prepare_annotation.py /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf /home/data/indices/dexseq/annot.gtf"
+	User time (seconds): 208.65
+	System time (seconds): 5.66
+	Percent of CPU this job got: 103%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:27.54
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1247444
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 732400
+	Voluntary context switches: 3032
+	Involuntary context switches: 277
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 288432
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
++ kill -15 13837
+++ date +%Y/%m/%d-%H:%M:%S
++ echo '[INFO] [generate_indices.sh] [DEXSeq] [2021/03/16-19:25:16] End: process GTF-File
+'
++ [[ y = \y ]]
+++ date +%Y/%m/%d-%H:%M:%S
++ echo '
+[INFO] [generate_indices.sh] [R] [2021/03/16-19:25:16] Start: generate R index...'
++ mkdir -p /home/data/indices/R/
++ wid=14584
++ /usr/bin/time -v /home/scripts/generate_R_index.R --gtf /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf --outdir /home/data/indices/R/ --organism homo_sapiens --taxonomyId 9606
+++ date +%s
++ watch pidstat -dru -hl '>>' /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/r_index-1615922716.pidstat
+Loading required package: BiocGenerics
+Loading required package: parallel
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:parallel’:
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    anyDuplicated, append, as.data.frame, basename, cbind, colnames,
+    dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+    grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
+    order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unsplit, which, which.max, which.min
+
+Loading required package: S4Vectors
+Loading required package: stats4
+
+Attaching package: ‘S4Vectors’
+
+The following object is masked from ‘package:base’:
+
+    expand.grid
+
+Loading required package: IRanges
+Loading required package: GenomeInfoDb
+Loading required package: GenomicRanges
+Loading required package: AnnotationDbi
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+Import genomic features from the file as a GRanges object ... OK
+Prepare the 'metadata' data frame ... OK
+Make the TxDb object ... OK
+Warning message:
+In .get_cds_IDX(mcols0$type, mcols0$phase) :
+  The "phase" metadata column contains non-NA values for features of type
+  stop_codon. This information was ignored.
+	Command being timed: "/home/scripts/generate_R_index.R --gtf /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf --outdir /home/data/indices/R/ --organism homo_sapiens --taxonomyId 9606"
+	User time (seconds): 101.26
+	System time (seconds): 7.83
+	Percent of CPU this job got: 104%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:44.27
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3497324
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 87
+	Minor (reclaiming a frame) page faults: 850357
+	Voluntary context switches: 5279
+	Involuntary context switches: 188
+	Swaps: 0
+	File system inputs: 337720
+	File system outputs: 480344
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
++ kill -15 14584
+++ date +%Y/%m/%d-%H:%M:%S
++ echo '[INFO] [generate_indices.sh] [R] [2021/03/16-19:27:00] End: generate R index...
+'
++ [[ y = \y ]]
+++ date +%Y/%m/%d-%H:%M:%S
++ echo '
+[INFO] [generate_indices.sh] [Salmon] [2021/03/16-19:27:00] Start: generate Salmon index...'
++ mkdir -p /home/data/indices/salmon/
++ wid=14964
++ /usr/bin/time -v /home/software/gffread/gffread -w /home/data/indices/salmon/cdna.fa -g /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf
+++ date +%s
++ watch pidstat -dru -hl '>>' /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/salmon_index-1615922820.pidstat
+FASTA index file /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa.fai created.
+	Command being timed: "/home/software/gffread/gffread -w /home/data/indices/salmon/cdna.fa -g /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf"
+	User time (seconds): 65.26
+	System time (seconds): 2.75
+	Percent of CPU this job got: 97%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:09.85
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 813200
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 110307
+	Voluntary context switches: 5244
+	Involuntary context switches: 47
+	Swaps: 0
+	File system inputs: 3608
+	File system outputs: 771464
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
++ kill -15 14964
+++ date +%Y/%m/%d-%H:%M:%S
++ echo '
+[INFO] [generate_indices.sh] [Salmon] [2021/03/16-19:28:10] Start: generate Salmon index...'
++ [[ y = \y ]]
+++ date +%Y/%m/%d-%H:%M:%S
++ echo '
+[INFO] [generate_indices.sh] [kallisto] [2021/03/16-19:28:10] Start: generate kallisto index...'
++ mkdir -p /home/data/indices/kallisto/
++ wid=15076
++ /usr/bin/time -v /home/software/kallisto/kallisto index --index /home/data/indices/kallisto/INDEX /home/data/indices/salmon/cdna.fa
+++ date +%s
++ watch pidstat -dru -hl '>>' /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/kallisto_index-1615922890.pidstat
+
+[build] loading fasta file /home/data/indices/salmon/cdna.fa
+[build] k-mer length: 31
+[build] warning: clipped off poly-A tail (longer than 10)
+        from 1831 target sequences
+[build] warning: replaced 1216 non-ACGUT characters in the input sequence
+        with pseudorandom nucleotides
+[build] counting k-mers ... done.
+[build] building target de Bruijn graph ...  done 
+[build] creating equivalence classes ...  done
+[build] target de Bruijn graph has 1525359 contigs and contains 143321175 k-mers 
+
+	Command being timed: "/home/software/kallisto/kallisto index --index /home/data/indices/kallisto/INDEX /home/data/indices/salmon/cdna.fa"
+	User time (seconds): 310.50
+	System time (seconds): 4.40
+	Percent of CPU this job got: 92%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 5:39.28
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 9940480
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 2
+	Minor (reclaiming a frame) page faults: 331239
+	Voluntary context switches: 64176
+	Involuntary context switches: 337
+	Swaps: 0
+	File system inputs: 787744
+	File system outputs: 6301024
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
++ kill -15 15076
+++ date +%Y/%m/%d-%H:%M:%S
++ echo '[INFO] [generate_indices.sh] [kallisto] [2021/03/16-19:33:49] End: generate kallisto index...
+'
++ [[ y = \y ]]
++ podman run --pull=always -v /mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103:/home/data/indices -v /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf:/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf -v /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa:/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa -v /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa.fai:/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa.fai -v /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG:/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG --rm -it hadziahmetovic/empires:latest /home/scripts/empires_buildindex.sh /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa.fai /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG
+Trying to pull registry.opensuse.org/hadziahmetovic/empires:latest...
+  name unknown
+Trying to pull docker.io/hadziahmetovic/empires:latest...
+Getting image source signatures
+Copying blob sha256:fc5eabcede3645338ce4f48b82a9c70a12f11b8d569a562c1ce54a7e670b0e98
+Copying blob sha256:65a2e4aad8c98294e53534e7aef0572d7a04cc37264f1b4b75d0878244e59c7f
+Copying blob sha256:df20fa9351a15782c64e6dddb2d4a6f50bf6d3688060a34c4014b0d9a752eb4c
+Copying blob sha256:bebb37f98198087f684f5622620e05e163d75f864cc2ba46db1874ffb1398dc7
+Copying blob sha256:723da53a3ec28f1a51b1bf3e799f92fc503e5086f0b85f77c6522954370253b6
+Copying blob sha256:5c346cad616adcb3262b4680d8389348a75d789facfe1c322c272b648e7ad318
+Copying config sha256:29a0fa56e55f164f7f1e59f9acf35452d24d0f663e0f5313d7f062acf2500f31
+Writing manifest to image destination
+Storing signatures

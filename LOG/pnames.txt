@@ -1,0 +1,55 @@
+
+/bin/bash -x /home/scripts/generate_indices.sh --taxid 9606 --organism homo_sapiens --nthread 6 --star --hisat2 --salmon --dexs
+/usr/bin/python3 /home/scripts/DEXSeq/dexseq_prepare_annotation.py --aggregate=no /mnt/raidinput2/tmp/hadziahmetovic/index/anno
+/usr/bin/python3 /home/scripts/DEXSeq/dexseq_prepare_annotation.py /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sap
+/usr/bin/time -v /usr/bin/python3 /home/scripts/DEXSeq/dexseq_prepare_annotation.py --aggregate=no /mnt/raidinput2/tmp/hadziahm
+/usr/bin/time -v /usr/bin/python3 /home/scripts/DEXSeq/dexseq_prepare_annotation.py /mnt/raidinput2/tmp/hadziahmetovic/index/an
+pidstat -dru -hl 
+sh -c pidstat -dru -hl >> /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/dexseq_index-1615922302.pidstat 
+watch pidstat -dru -hl >> /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/dexseq_index-1615922302.pidstat 
+
+/bin/bash /home/scripts/empires_buildindex.sh /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa.fai /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG 
+java -cp /home/software/nlEmpiRe.jar nlEmpiRe.rnaseq.mapping.ExtractTranscriptomeInfo -gtf /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf -genome /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa -genomeidx /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa.fai -o /home/data/indices/empires/empires.index 
+pidstat -dru -hl 
+watch pidstat -dru -hl >> /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/empires_index-1615923245.pidstat 
+
+/bin/bash -x /home/scripts/generate_indices.sh --taxid 9606 --organism homo_sapiens --nthread 6 --star --hisat2 --salmon --dexs
+/usr/bin/time -v python3 /home/software/hisat2-2.2.1/extract_exons.py /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_
+/usr/bin/time -v python3 /home/software/hisat2-2.2.1/extract_splice_sites.py /mnt/raidinput2/tmp/hadziahmetovic/index/annotatio
+/usr/bin/time -v python3 /home/software/hisat2-2.2.1/hisat2-build -p 8 --ss /home/data/indices/hisat2/tmp/tmp.ss --exon /home/d
+hisat2-build --wrapper basic-0 -p 8 --ss /home/data/indices/hisat2/tmp/tmp.ss --exon /home/data/indices/hisat2/tmp/tmp.exon /mn
+pidstat -dru -hl 
+python3 /home/software/hisat2-2.2.1/extract_exons.py /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.10
+python3 /home/software/hisat2-2.2.1/extract_splice_sites.py /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GR
+sh -c pidstat -dru -hl >> /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/hisat_index-1615913088.pidstat 
+watch pidstat -dru -hl >> /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/hisat_index-1615913088.pidstat 
+
+/bin/bash -x /home/scripts/generate_indices.sh --taxid 9606 --organism homo_sapiens --nthread 6 --star --hisat2 --salmon --dexs
+/home/software/kallisto/kallisto index --index /home/data/indices/kallisto/INDEX /home/data/indices/salmon/cdna.fa 
+/usr/bin/time -v /home/software/kallisto/kallisto index --index /home/data/indices/kallisto/INDEX /home/data/indices/salmon/cdn
+pidstat -dru -hl 
+sh -c pidstat -dru -hl >> /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/kallisto_index-1615922890.pidstat 
+watch pidstat -dru -hl >> /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/kallisto_index-1615922890.pidstat 
+
+/bin/bash -x /home/scripts/generate_indices.sh --taxid 9606 --organism homo_sapiens --nthread 6 --star --hisat2 --salmon --dexs
+/usr/bin/time -v /home/scripts/generate_R_index.R --gtf /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38
+/usr/local/lib/R/bin/exec/R --no-save --no-restore --slave --no-restore --file=/home/scripts/generate_R_index.R --args --gtf /m
+pidstat -dru -hl 
+sh -c pidstat -dru -hl >> /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/r_index-1615922716.pidstat 
+watch pidstat -dru -hl >> /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/r_index-1615922716.pidstat 
+
+/bin/bash -x /home/scripts/generate_indices.sh --taxid 9606 --organism homo_sapiens --nthread 6 --star --hisat2 --salmon --dexs
+/home/software/gffread/gffread -w /home/data/indices/salmon/cdna.fa -g /mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo
+/usr/bin/time -v /home/software/gffread/gffread -w /home/data/indices/salmon/cdna.fa -g /mnt/raidinput2/tmp/hadziahmetovic/inde
+gffread
+pidstat -dru -hl 
+sh -c pidstat -dru -hl >> /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/salmon_index-1615922820.pidstat 
+watch pidstat -dru -hl >> /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/salmon_index-1615922820.pidstat 
+
+/bin/bash -x /home/scripts/generate_indices.sh --taxid 9606 --organism homo_sapiens --nthread 6 --star --hisat2 --salmon --dexs
+/home/software/STAR/bin/Linux_x86_64_static/STAR --runMode genomeGenerate --runThreadN 6 --genomeDir /home/data/indices/STAR/ -
+/usr/bin/time -v /home/software/STAR/bin/Linux_x86_64_static/STAR --runMode genomeGenerate --runThreadN 6 --genomeDir /home/dat
+STAR
+pidstat -dru -hl 
+sh -c pidstat -dru -hl >> /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/star_index-1615918098.pidstat 
+watch pidstat -dru -hl >> /mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow/LOG/star_index-1615918098.pidstat 
