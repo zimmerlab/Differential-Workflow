@@ -87,6 +87,7 @@ while true; do
     esac
 done
 
+mkdir -p $out
 
 podman run --pull=always -v $index:$index -v $pdata:$pdata -v $samples:$samples -v $out:$out -v $log:$log \
 	--rm hadziahmetovic/rnaseq-toolkit /home/scripts/mapping_kallisto.sh ${params[@]}

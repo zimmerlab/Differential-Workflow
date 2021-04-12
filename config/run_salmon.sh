@@ -22,7 +22,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=
-LONGOPTS=index:,pdata:,samples:,out:,nthread:,log:
+LONGOPTS=index:,pdata:,samples:,out:,nthread:,log:,
 
 # -regarding ! and PIPESTATUS see above
 # -temporarily store output to be able to check for errors
@@ -37,6 +37,7 @@ fi
 # read getopt’s output this way to handle the quoting right:
 eval set -- "$PARSED"
 
+bootstrap=100 fraglen=200 sd=80
 # now enjoy the options in order and nicely split until we see --
 while true; do
     case "$1" in
@@ -77,4 +78,4 @@ done
 mkdir -p $out
 
 podman run --pull=always -v $index:$index -v $pdata:$pdata -v $samples:$samples -v $out:$out -v $log:$log \
-	--rm hadziahmetovic/rnaseq-toolkit /home/scripts/mapping_star.sh ${params[@]}
+	--rm hadziahmetovic/salmon /home/scripts/mapping_salmon.sh ${params[@]}
