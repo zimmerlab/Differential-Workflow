@@ -3,8 +3,8 @@
 	<settings>
 		<constants>
 			<const name="WATCHDOG">/home/proj/software/watchdog</const>
-			<const name="BASE">/mnt/raidinput2/tmp/hadziahmetovic/empires_2021</const>
-			<const name="INPUT_TABLE">${BASE}/sample.table</const>
+			<const name="BASE">/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow</const>
+			<const name="INPUT_TABLE">${BASE}/sample.table.test</const>
 			<const name="LOGDIR">${BASE}/LOG</const>
 			<const name="INDEXDIR">/mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103</const>
 			<!--const name="SAMPLEDIR">${BASE}/samples</const -->
@@ -17,7 +17,7 @@
 		<executors>
 			<sge name="cluster_low" default="true" maxRunning="8" slots="1" memory="80000M" />  <!--queue="dell.q"-->
 			<sge name="indexing" maxRunning="1" slots="1" memory="160000M" queue="dell256.q"/>
-			<sge name="emp" maxRunning="5" slots="1" memory="70000M"/>
+			<sge name="emp" maxRunning="3" slots="1" memory="80000M" queue="dell256.q"/>
 			<!-- not working yet with this image (wrong shebang as no /bin/bash in image...) -->
 			<!-- <sge name="cluster_low_podman" default="true" maxRunning="8" slots="1" memory="2048M" queue="hpclient.q" container="docker" shebang="#!/usr/bin/env bash"/> -->	
 		</executors>
@@ -47,10 +47,13 @@
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="2" name="star" executor="star" processBlock="table">
+		<scriptCallerTask id="2" name="star" executor="emp" processBlock="table">
+			<dependencies>
+				<depends separate="true">1</depends>
+			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_star.sh</script>
-				<config>${BASE}/config/star.config</config>
+				<!--config>${BASE}/config/star.config</config-->
 					<param>index:${INDEXDIR}</param>
 					<param>pdata:{$pdata}</param>
 					<param>samples:{$samples}</param>
@@ -64,7 +67,10 @@
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="3" name="hisat" executor="hisat" processBlock="table">
+		<scriptCallerTask id="3" name="hisat" executor="emp" processBlock="table">
+			<dependencies>
+				<depends separate="true">1</depends>
+			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_hisat.sh</script>
 					<param>index:${INDEXDIR}</param>
@@ -80,7 +86,10 @@
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="4" name="kallisto" executor="kallisto" processBlock="table">
+		<scriptCallerTask id="4" name="kallisto" executor="emp" processBlock="table">
+			<dependencies>
+				<depends separate="true">1</depends>
+			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_kallisto.sh</script>
 				<config>${BASE}/config/kallisto.config</config>
@@ -97,7 +106,10 @@
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="5" name="salmon" executor="salmon" processBlock="table">
+		<scriptCallerTask id="5" name="salmon" executor="emp" processBlock="table">
+			<dependencies>
+				<depends separate="true">2</depends>
+			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_salmon.sh</script>
 					<param>index:${INDEXDIR}</param>
@@ -112,6 +124,28 @@
 				<stderr>${LOGDIR}/salmon_{$label}.err</stderr>
 			</streams>
 		</scriptCallerTask>
+
+		<!--scriptCallerTask id="6" name="empire" executor="emp" processBlock="table">
+			<dependencies>
+				<depends separate="true">2</depends>
+				<depends separate="true">3</depends>
+				<depends separate="true">4</depends>
+				<depends separate="true">5</depends>
+			</dependencies>
+			<parameter>
+				<script>${BASE}/config/run_empires.sh</script>
+					<param>index:${INDEXDIR}</param>
+					<param>pdata:{$pdata}</param>
+					<param>samples:{$samples}</param>
+					<param>out:{$out}</param>
+					<param>nthread:${NTHREAD}</param>
+					<param>log:${LOGDIR}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/empires_{$label}.out</stdout>
+				<stderr>${LOGDIR}/empires_{$label}.err</stderr>
+			</streams>
+		</scriptCallerTask-->
 
 		<!-- scriptCallerTask id="2" name="convert" processBlock="table">
 			<parameter>
