@@ -3,11 +3,11 @@
 	<settings>
 		<constants>
 			<const name="WATCHDOG">/home/proj/software/watchdog</const>
-			<const name="BASE">/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow</const>
+			<const name="BASE">/mnt/raidinput2/tmp/hadziahmetovic/empires_2021</const>
 			<const name="INPUT_TABLE">${BASE}/sample.table</const>
 			<const name="LOGDIR">${BASE}/LOG</const>
 			<const name="INDEXDIR">/mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103</const>
-			<const name="SAMPLEDIR">${BASE}/samples</const>
+			<!--const name="SAMPLEDIR">${BASE}/samples</const -->
 			<const name="GTF">/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf</const>
 			<const name="FASTA">/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa</const>
 			<const name="NTHREAD">12</const>

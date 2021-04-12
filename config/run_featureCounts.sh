@@ -1,11 +1,4 @@
 #!/bin/bash -x
-## -x : expands variables and prints commands as they are called
-
-##
-## Requires fasta index next to fasta file
-##
-## TODO: automate the index
-##
 
 echo $@
 params=("$@")
@@ -22,7 +15,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=
-LONGOPTS=index:,pdata:,samples:,out:,nthread:,log:,bootstrap:,fraglen:,sd:,
+LONGOPTS=index:,gtf:,pdata:,out:,nthread:,log:,dexseq
 
 # -regarding ! and PIPESTATUS see above
 # -temporarily store output to be able to check for errors
@@ -37,7 +30,7 @@ fi
 # read getopt’s output this way to handle the quoting right:
 eval set -- "$PARSED"
 
-bootstrap=100 fraglen=200 sd=80
+dexseq=n
 # now enjoy the options in order and nicely split until we see --
 while true; do
     case "$1" in
@@ -45,12 +38,12 @@ while true; do
         	index="$2"
             shift 2
             ;;
-		--pdata)
-            pdata="$2"
+		--gtf)
+        	gtf="$2"
             shift 2
             ;;
-        --samples)
-            samples="$2"
+		--pdata)
+            pdata="$2"
             shift 2
             ;;
         --out)
@@ -65,16 +58,8 @@ while true; do
 			log="$2"
 			shift 2
 			;;
-		--bootstrap)
-			bootstrap="$2"
-			shift 2
-			;;
-		--fraglen)
-			fraglen="$2"
-			shift 2
-			;;
-		--sd)
-			sd="$2"
+		--dexseq)
+			dexseq="y"
 			shift 2
 			;;
         --)
@@ -87,6 +72,5 @@ while true; do
     esac
 done
 
-
-podman run --pull=always -v $index:$index -v $pdata:$pdata -v $samples:$samples -v $out:$out -v $log:$log \
-	--rm hadziahmetovic/rnaseq-toolkit /home/scripts/mapping_kallisto.sh ${params[@]}
+podman run --pull=always -v $index:$index -v $gtf:$gtf -v $pdata:$pdata -v $out:$out -v $log:$log \
+	--rm hadziahmetovic/rnaseq-toolkit /home/scripts/process_featureCounts.sh ${params[@]}
