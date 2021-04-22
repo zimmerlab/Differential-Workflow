@@ -16,7 +16,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=
-LONGOPTS=pdata:,index:,outdir:
+LONGOPTS=pdata:,index:,out:
 
 # -regarding ! and PIPESTATUS see above
 # -temporarily store output to be able to check for errors
@@ -31,7 +31,7 @@ fi
 # read getopt’s output this way to handle the quoting right:
 eval set -- "$PARSED"
 
-pdata=- outdir=- index=-
+pdata=- out=- index=-
 # now enjoy the options in order and nicely split until we see --
 while true; do
     case "$1" in
@@ -43,8 +43,8 @@ while true; do
         index="$2"
             shift 2
             ;;
-		--outdir)
-        outdir="$2"
+		--out)
+        out="$2"
             shift 2
             ;;
         --)
@@ -63,10 +63,21 @@ if [[ $# -ne 0 ]]; then
     #exit 4
 fi
 
-sampledir="home/data/out/SALMON"
-outfile="/home/data/out/diff_splicing_outs/BANDITS"
-rindex="/home/data/indices/R/tx2gene.RData"
+sampledir="$out/SALMON/READS"
+sampledir2="$out/SALMON/STAR"
+sampledir3="$out/KALLISTO/quant"
+
+outfile="$out/diff_splicing_outs/BANDITS"
+rindex="$index/R/tx2gene.RData"
+
+for file in `find $sampledir -name "*eq_classes.txt.gz"`; do gunzip $file; done
+for file in `find $sampledir2 -name "*eq_classes.txt.gz"`; do gunzip $file; done  
 
 ## Run indices
-podman run -v $index:/home/data/indices -v $outdir:/home/data/out -v $pdata:$pdata --rm -dit hadziahmetovic/bandits:latest /home/scripts/bandits_call_salmon.R --tx2gene $rindex --pdata $pdata --basedir $sampledir --outfile $outfile
+podman run -v $index:$index -v $out:$out -v $pdata:$pdata --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_bandits.R --tx2gene $rindex --pdata $pdata --basedir $sampledir --outfile $outfile.salmon_reads
+podman run -v $index:$index -v $out:$out -v $pdata:$pdata --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_bandits.R --tx2gene $rindex --pdata $pdata --basedir $sampledir2 --outfile $outfile.salmon_star
+
+## TODO implement flag for switch
+#podman run -v $index:$index -v $out:$out -v $pdata:$pdata --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_bandits.R --tx2gene $rindex --pdata $pdata --basedir $sampledir2 --outfile $outfile.kallisto
+
 

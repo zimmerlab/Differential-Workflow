@@ -139,18 +139,47 @@
 					<param>samples:{$samples}</param>
 					<param>out:{$out}</param>
 					<param>nthread:${NTHREAD}</param>
+					<param>gtf:${GTF}</param>
 					<param>log:${LOGDIR}</param>
 					<param>hisat2</param>
 					<param>star</param>
 					<param>kallisto</param>
 					<param>salmon</param>
 					<param>ecc</param>
+					<param>strand:null</param>
 			</parameter>
 			<streams>
 				<stdout>${LOGDIR}/empires_{$label}.out</stdout>
 				<stderr>${LOGDIR}/empires_{$label}.err</stderr>
 			</streams>
 		</scriptCallerTask>
+
+		<scriptCallerTask id="7" name="bandits" processBlock="table" executor="emp">
+			<parameter>
+				<script>${BASE}/config/run_bandits.sh</script>
+				<param>index:{$index}</param>
+				<param>pdata:{$pdata}</param>
+				<param>out:{$out}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/bandits.{$dir}.out</stdout>
+				<stderr>${LOGDIR}/bandits.{$dir}.err</stderr>
+			</streams>
+		</scriptCallerTask>
+
+		<!--scriptCallerTask id="8" name="dexseq" processBlock="table" executor="emp" notify="enabled">
+			<parameter>
+				<script>${BASE}/config/run_dexseq.sh</script>
+				<param>index:{$index}</param>
+				<param>pdata:{$pdata}</param>
+				<param>outdir:{$out}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/dexseq.{$dir}.out</stdout>
+				<stderr>${LOGDIR}/dexseq.{$dir}.err</stderr>
+			</streams>
+		</scriptCallerTask-->
+
 
 		<!-- scriptCallerTask id="2" name="convert" processBlock="table">
 			<parameter>
