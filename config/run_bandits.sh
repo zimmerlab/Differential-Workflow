@@ -16,7 +16,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=
-LONGOPTS=pdata:,index:,out:
+LONGOPTS=pdata:,index:,out:,nthread:,log:,salmon,kallisto
 
 # -regarding ! and PIPESTATUS see above
 # -temporarily store output to be able to check for errors
@@ -31,7 +31,7 @@ fi
 # read getopt’s output this way to handle the quoting right:
 eval set -- "$PARSED"
 
-pdata=- out=- index=-
+pdata=- out=- index=- nthread=4 salmon=n kallisto=n
 # now enjoy the options in order and nicely split until we see --
 while true; do
     case "$1" in
@@ -40,12 +40,28 @@ while true; do
             shift 2
             ;;
 		--index)
-        index="$2"
+        	index="$2"
             shift 2
             ;;
 		--out)
-        out="$2"
+        	out="$2"
             shift 2
+            ;;
+        --nthread)
+        	nthread="$2"
+            shift 2
+            ;;
+		--log)
+        	log="$2"
+            shift 2
+            ;;
+        --salmon)
+            salmon=y
+            shift
+            ;;
+        --kallisto)
+            kallisto=y
+            shift
             ;;
         --)
             shift
@@ -63,21 +79,8 @@ if [[ $# -ne 0 ]]; then
     #exit 4
 fi
 
-sampledir="$out/SALMON/READS"
-sampledir2="$out/SALMON/STAR"
-sampledir3="$out/KALLISTO/quant"
-
-outfile="$out/diff_splicing_outs/BANDITS"
-rindex="$index/R/tx2gene.RData"
-
-for file in `find $sampledir -name "*eq_classes.txt.gz"`; do gunzip $file; done
-for file in `find $sampledir2 -name "*eq_classes.txt.gz"`; do gunzip $file; done  
 
 ## Run indices
-podman run -v $index:$index -v $out:$out -v $pdata:$pdata --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_bandits.R --tx2gene $rindex --pdata $pdata --basedir $sampledir --outfile $outfile.salmon_reads
-podman run -v $index:$index -v $out:$out -v $pdata:$pdata --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_bandits.R --tx2gene $rindex --pdata $pdata --basedir $sampledir2 --outfile $outfile.salmon_star
-
-## TODO implement flag for switch
-#podman run -v $index:$index -v $out:$out -v $pdata:$pdata --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_bandits.R --tx2gene $rindex --pdata $pdata --basedir $sampledir2 --outfile $outfile.kallisto
+podman run --pull=always -v $index:$index -v $out:$out -v $pdata:$pdata -v $log:$log --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_bandits.sh ${params[@]}
 
 

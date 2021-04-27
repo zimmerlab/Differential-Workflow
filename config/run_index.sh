@@ -129,6 +129,10 @@ if [[ "$empires" = "y" ]]; then
 	##		/home/data/indices/empires/Homo_sapiens.GRCh37.75.dna.toplevel.fa.index
 fi
 
+#if [[ "$salmon" = "y" ]]; then
+#	podman run --pull=always -v $index:$index -v $log:$log \
+#	--rm hadziahmetovic/salmon /home/scripts/index_salmon.sh --index $index --log $log
+#fi
 
 
 
