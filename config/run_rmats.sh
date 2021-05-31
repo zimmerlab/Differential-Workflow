@@ -151,7 +151,8 @@ done
 ## this might fail for very long read lengths
 if [[ "$readlength" = "0" ]]; then
 	file=`head -1 $base/$cond.txt | cut -d":" -f1`
-	readlength=$((`head -100 $file | zcat | head -2 | tail -1 | wc -c`-1))
+	#readlength=$((`head -100 $file | zcat | head -2 | tail -1 | wc -c`-1))
+	readlength=$(head -n 2 < <(zcat $file) | tail -n 1 | tr -d '\n' | tr -d '\r' | wc -c)
 fi
 
 #rMATS	TODO add rmats mapping
@@ -160,13 +161,13 @@ for method in "hisat" "star" "contextmap" "ideal"; do
 	if [[ "${map[$method]}" = "y" ]]; then
 		mkdir -p $out/diff_splicing_outs/rMATS_$method
 
-		watch pidstat -dru -hl >> $log/rmats_$method-$(date +%s).pidstat & wid=$!
+		#watch pidstat -dru -hl >> $log/rmats_$method-$(date +%s).pidstat & wid=$!
 
 		( [ -f "$out/diff_splicing_outs/rMATS_$method/SE.MATS.JC.txt" ] && echo "[INFO] [rMATS] $out/diff_splicing_outs/rMATS_$method/SE.MATS.JC.txt already exists, skipping.."$'\n' ) \
 			|| ($rmats_call --b1 $out/rMATS/${conds[0]}.$method.samples --b2 $out/rMATS/${conds[1]}.$method.samples \
 				--gtf $gtf -t paired --nthread $nthread --od $out/diff_splicing_outs/rMATS_$method --readLength $readlength --tmp /tmp)
 
-		kill -15 $wid
+		#kill -15 $wid
 	fi
 done
  	#-t paired --libType fr-unstranded --readLength $readLength --gtf $gtf --od $outDir/diff_splicing_outs/rMATS --nthread $nthreads )

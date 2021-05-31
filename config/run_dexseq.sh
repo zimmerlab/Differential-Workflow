@@ -16,7 +16,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=
-LONGOPTS=pdata:,index:,outdir:,condpairs:
+LONGOPTS=pdata:,index:,out:,nthread:,log:,hisat2,star,contextmap,ideal,
 
 # -regarding ! and PIPESTATUS see above
 # -temporarily store output to be able to check for errors
@@ -31,7 +31,10 @@ fi
 # read getopt’s output this way to handle the quoting right:
 eval set -- "$PARSED"
 
-pdata=- outdir=- index=- condpairs=-
+declare -A map
+
+pdata=- out=- index=- nthread=4 map[hisat]=n map[star]=n
+map[contextmap]=n map[ideal]=n
 # now enjoy the options in order and nicely split until we see --
 while true; do
     case "$1" in
@@ -40,16 +43,36 @@ while true; do
             shift 2
             ;;
 		--index)
-        index="$2"
+        	index="$2"
             shift 2
             ;;
-		--outdir)
-        outdir="$2"
+		--out)
+        	out="$2"
             shift 2
             ;;
-		--condpairs)
-        condpairs="$2"
+        --nthread)
+        	nthread="$2"
             shift 2
+            ;;
+		--log)
+        	log="$2"
+            shift 2
+            ;;
+	    --hisat2)
+            map[hisat]=y
+            shift
+            ;;
+        --star)
+            map[star]=y
+            shift
+            ;;
+        --contextmap)
+            map[contextmap]=y
+            shift
+            ;;
+        --ideal)
+            map[ideal]=y
+            shift
             ;;
         --)
             shift
@@ -61,19 +84,19 @@ while true; do
     esac
 done
 
-## handle non-option arguments
+# handle non-option arguments
 if [[ $# -ne 0 ]]; then
     echo "$0: empty flag detected, is this intentional?!"
     #exit 4
 fi
 
-## set default cond pair if not given in params
-if [[ "$condpairs" = "-" ]]; then
-	condpairs=/home/data/cond.pairs
-fi
+### set default cond pair if not given in params
+#if [[ "$condpairs" = "-" ]]; then
+#	condpairs=/home/data/cond.pairs
+#fi
 
 ## run dexseq
-podman run -v $index:/home/data/indices -v $outdir:/home/data/out -v $pdata:$pdata --rm -it hadziahmetovic/splicing-main:latest /home/scripts/dexAna.R $pdata /home/data/out/COUNTS/DEXSeq_HTcounts $condpairs /home/data/indices/DEXSeq/annot.noaggregate.gtf /home/data/out/diff_splicing_outs
+podman run --pull=always -v $index:$index -v $out:$out -v $pdata:$pdata -v $log:$log --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_dexseq.sh ${params[@]}
 
-
+#podman run -v $index:/home/data/indices -v $outdir:/home/data/out -v $pdata:$pdata --rm -it hadziahmetovic/splicing-main:latest /home/scripts/dexAna.R $pdata /home/data/out/COUNTS/DEXSeq_HTcounts $condpairs /home/data/indices/DEXSeq/annot.noaggregate.gtf /home/data/out/diff_splicing_outs
 #$dexseq_script $pData $outDir/COUNTS/DEXSeq_HTcounts $condPairs /home/indices/DEXSeq/$indexAppendix/annot.noaggregate.gtf $outDir/diff_splicing_outs

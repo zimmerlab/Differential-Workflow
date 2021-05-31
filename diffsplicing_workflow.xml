@@ -4,20 +4,22 @@
 		<constants>
 			<const name="WATCHDOG">/home/proj/software/watchdog</const>
 			<const name="BASE">/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow</const>
-			<const name="INPUT_TABLE">${BASE}/sample.table.test</const>
+			<const name="INPUT_TABLE">${BASE}/sample.table.kempkes</const>
 			<const name="LOGDIR">${BASE}/LOG</const>
 			<const name="INDEXDIR">/mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103</const>
 			<!--const name="SAMPLEDIR">${BASE}/samples</const -->
 			<const name="GTF">/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf</const>
 			<const name="FASTA">/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa</const>
-			<const name="NTHREAD">12</const>
+			<const name="NTHREAD">16</const>
 		</constants>
 
 
 		<executors>
 			<sge name="cluster_low" default="true" maxRunning="8" slots="1" memory="80000M" />  <!--queue="dell.q"-->
 			<sge name="indexing" maxRunning="1" slots="1" memory="160000M" queue="dell256.q"/>
-			<sge name="emp" maxRunning="3" slots="1" memory="80000M" queue="dell256.q"/>
+			<sge name="emp" maxRunning="20" slots="16" memory="50000M"/>
+			<sge name="star" maxRunning="5" slots="16" memory="105000M"/>
+
 			<!-- not working yet with this image (wrong shebang as no /bin/bash in image...) -->
 			<!-- <sge name="cluster_low_podman" default="true" maxRunning="8" slots="1" memory="2048M" queue="hpclient.q" container="docker" shebang="#!/usr/bin/env bash"/> -->	
 		</executors>
@@ -47,7 +49,7 @@
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="2" name="star" executor="emp" processBlock="table">
+		<scriptCallerTask id="2" name="star" executor="star" processBlock="table">
 			<dependencies>
 				<depends separate="true">1</depends>
 			</dependencies>
@@ -146,9 +148,9 @@
 					<param>kallisto</param>
 					<param>salmon</param>
 					<param>ecc</param>
-					<param>contextmap</param>
+					<!--param>contextmap</param-->
 					<param>ideal</param>
-					<param>strand:null</param>
+					<param>strand:true</param>
 			</parameter>
 			<streams>
 				<stdout>${LOGDIR}/empires_{$label}.out</stdout>
@@ -231,10 +233,9 @@
 				<param>out:{$out}</param>
 				<param>nthread:${NTHREAD}</param>
 				<param>log:${LOGDIR}</param>
-				<param>readlength:101</param>
 				<param>star</param>
 				<param>hisat</param>
-				<param>contextmap</param>
+					<!--param>contextmap</param-->
 				<param>ideal</param>
 				<param>rmats</param>
 			</parameter>
@@ -244,18 +245,47 @@
 			</streams>
 		</scriptCallerTask>
 
-		<!--scriptCallerTask id="8" name="dexseq" processBlock="table" executor="emp" notify="enabled">
+		<scriptCallerTask id="11" name="fC" executor="emp" processBlock="table">
+			<dependencies>
+				<depends separate="true">3</depends>
+			</dependencies>
 			<parameter>
-				<script>${BASE}/config/run_dexseq.sh</script>
-				<param>index:{$index}</param>
-				<param>pdata:{$pdata}</param>
-				<param>outdir:{$out}</param>
+				<script>${BASE}/config/run_featureCounts.sh</script>
+					<param>index:${INDEXDIR}</param>
+					<param>gtf:${GTF}</param>
+					<param>pdata:{$pdata}</param>
+					<param>out:{$out}</param>
+					<param>dexseq:</param>
+					<param>nthread:${NTHREAD}</param>
+					<param>log:${LOGDIR}</param>
 			</parameter>
 			<streams>
-				<stdout>${LOGDIR}/dexseq.{$dir}.out</stdout>
-				<stderr>${LOGDIR}/dexseq.{$dir}.err</stderr>
+				<stdout>${LOGDIR}/featureCounts_{$label}.out</stdout>
+				<stderr>${LOGDIR}/featureCounts_{$label}.err</stderr>
 			</streams>
-		</scriptCallerTask-->
+		</scriptCallerTask>
+
+		<scriptCallerTask id="12" name="dex" processBlock="table" executor="emp">
+			<dependencies>
+				<depends separate="true">11</depends>
+			</dependencies>
+			<parameter>
+				<script>${BASE}/config/run_dexseq.sh</script>
+				<param>index:${INDEXDIR}</param>
+				<param>pdata:{$pdata}</param>
+				<param>out:{$out}</param>
+				<param>nthread:${NTHREAD}</param>
+				<param>log:${LOGDIR}</param>
+				<param>star</param>
+				<param>hisat</param>
+					<!--param>contextmap</param-->
+				<param>ideal</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/dexseq.{$label}.out</stdout>
+				<stderr>${LOGDIR}/dexseq.{$label}.err</stderr>
+			</streams>
+		</scriptCallerTask>
 
 
 		<!-- scriptCallerTask id="2" name="convert" processBlock="table">

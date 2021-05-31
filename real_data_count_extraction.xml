@@ -10,10 +10,14 @@
 			<!--const name="SAMPLEDIR">${BASE}/samples</const -->
 			<const name="GTF">/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf</const>
 			<const name="FASTA">/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa</const>
-			<const name="NTHREAD">12</const>
+			<const name="SPLIC">12</const>
+			<const name="EXP">12</const>
+			<const name="TRLIST">12</const>
+			<const name="NTHREAD">32</const>
 		</constants>
 
 		<executors>
+			<sge name="star" maxRunning="5" slots="1" memory="105000M"/>
 			<sge name="emp" maxRunning="5" slots="1" memory="70000M"/>
 		</executors>
 
@@ -39,9 +43,27 @@
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="2" name="featureCounts" executor="emp" processBlock="table">
+		<scriptCallerTask id="2" name="star" executor="star" processBlock="table">
+			<parameter>
+				<script>${BASE}/config/run_star.sh</script>
+				<!--config>${BASE}/config/star.config</config-->
+					<param>index:${INDEXDIR}</param>
+					<param>pdata:{$pdata}</param>
+					<param>samples:{$samples}</param>
+					<param>out:{$out}</param>
+					<param>nthread:${NTHREAD}</param>
+					<param>log:${LOGDIR}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/star_{$dir}.out</stdout>
+				<stderr>${LOGDIR}/star_{$dir}.err</stderr>
+			</streams>
+		</scriptCallerTask>
+
+		<scriptCallerTask id="3" name="featureCounts" executor="emp" processBlock="table">
 			<dependencies>
 				<depends separate="true">1</depends>
+				<depends separate="true">2</depends>
 			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_featureCounts.sh</script>
@@ -49,14 +71,56 @@
 					<param>gtf:${GTF}</param>
 					<param>pdata:{$pdata}</param>
 					<param>out:{$out}</param>
-					<param>dexseq:</param>
 					<param>nthread:${NTHREAD}</param>
 					<param>log:${LOGDIR}</param>
+					<param>hisat2</param>
+					<param>star</param>
 			</parameter>
 			<streams>
 				<stdout>${LOGDIR}/featureCounts_{$dir}.out</stdout>
 				<stderr>${LOGDIR}/featureCounts_{$dir}.err</stderr>
 			</streams>
 		</scriptCallerTask>
+
+		<scriptCallerTask id="4" name="eval" executor="emp" processBlock="table">
+			<dependencies>
+				<depends separate="true">3</depends>
+			</dependencies>
+			<parameter>
+				<script>${BASE}/config/eval_real_data.sh</script>
+					<param>gtf:${GTF}</param>
+					<param>pdata:{$pdata}</param>
+					<param>out:{$out}</param>
+					<param>nthread:${NTHREAD}</param>
+					<param>log:${LOGDIR}</param>
+					<param>hisat2</param>
+					<param>star</param>
+					<param>base:${BASE}/config</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/eval_{$dir}.out</stdout>
+				<stderr>${LOGDIR}/eval_{$dir}.err</stderr>
+			</streams>
+		</scriptCallerTask>
+
+		<!--scriptCallerTask id="3" name="trCount" executor="emp" processBlock="table">
+			<dependencies>
+				<depends separate="true">2</depends>
+			</dependencies>
+			<parameter>
+				<script>${BASE}/config/trcount.sh</script>
+					<param>gtf:${GTF}</param>
+					<param>out:{$out}</param>
+					<param>log:${LOGDIR}</param>
+					<param>splic:${SPLIC}</param>
+					<param>exp:${EXP}</param>
+					<param>trlist:${TRLIST}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/trcount_{$dir}.out</stdout>
+				<stderr>${LOGDIR}/trcount_{$dir}.err</stderr>
+			</streams>
+		</scriptCallerTask-->
+
 	</tasks>
 </watchdog>

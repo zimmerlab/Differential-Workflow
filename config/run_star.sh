@@ -76,5 +76,11 @@ done
 
 mkdir -p $out
 
-podman run --pull=always -v $index:$index -v $pdata:$pdata -v $samples:$samples -v $out:$out -v $log:$log \
+if [ "$samples" = "$out" ]; then
+	mount="-v $samples:$samples"
+else
+	mount="-v $samples:$samples -v $out:$out"
+fi
+
+podman run --pull=always -v $index:$index -v $pdata:$pdata $mount -v $log:$log \
 	--rm hadziahmetovic/rnaseq-toolkit /home/scripts/mapping_star.sh ${params[@]}

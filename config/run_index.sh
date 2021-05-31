@@ -51,7 +51,7 @@ while true; do
             shift 2
             ;;
         --empires)
-        empires=y
+        	empires=y
             shift
             ;;
 		--index)
@@ -102,11 +102,13 @@ if [[ $# -ne 0 ]]; then
     #exit 4
 fi
 
+mkdir -p $index
+
 ## Run indices
-#if [[ "$star" = "y" ]] || [[ "$hisat2" = "y" ]] || [[ "$kallisto" = "y" ]] || [[ "$salmon" = "y" ]] || [[ "$dexseq" = "y" ]] || [[ "$r" = "y" ]]; then
-	#podman run --pull=always -v $index:/home/data/indices -v $gtf:$gtf -v $fasta:$fasta -v $log:$log --rm hadziahmetovic/rnaseq-toolkit /home/scripts/index_create_all.sh ${params[@]}
+if [[ "$star" = "y" ]] || [[ "$hisat2" = "y" ]] || [[ "$kallisto" = "y" ]] || [[ "$salmon" = "y" ]] || [[ "$dexseq" = "y" ]] || [[ "$r" = "y" ]]; then
+	podman run --pull=always -v $index:$index -v $gtf:$gtf -v $fasta:$fasta -v $log:$log --rm hadziahmetovic/rnaseq-toolkit /home/scripts/index_create_all.sh ${params[@]}
 	#podman run --pull=always -v $index:/home/data/indices -v $gtf:$gtf -v $fasta:$fasta -v $log:$log --rm hadziahmetovic/generate-indices /home/scripts/generate_index_star.sh ${params[@]}
-#fi
+fi
 
 if [[ "$empires" = "y" ]]; then
     ## echo "empires call here ... $gtf $fasta"
@@ -129,10 +131,10 @@ if [[ "$empires" = "y" ]]; then
 	##		/home/data/indices/empires/Homo_sapiens.GRCh37.75.dna.toplevel.fa.index
 fi
 
-#if [[ "$salmon" = "y" ]]; then
-#	podman run --pull=always -v $index:$index -v $log:$log \
-#	--rm hadziahmetovic/salmon /home/scripts/index_salmon.sh --index $index --log $log
-#fi
+if [[ "$salmon" = "y" ]]; then
+	podman run --pull=always -v $index:$index -v $log:$log \
+	--rm hadziahmetovic/salmon /home/scripts/index_salmon.sh --index $index --log $log
+fi
 
 
 

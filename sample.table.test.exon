@@ -1,0 +1,3 @@
+label	pdata	out	samples
+STEM_UNBIASED_FR200_RL100_exon	/mnt/raidinput2/tmp/hadziahmetovic/input/STEM_UNBIASED_FR200_RL100/pdata.txt	/mnt/raidtmp/hadziahmetovic/empires_2021/output/STEM_UNBIASED_FR200_RL100_exon	/mnt/raidtmp/hadziahmetovic/empires_2021/input/STEM_UNBIASED_FR200_RL100_exon
+STEM_UNBIASED_FR200_RL100_exon_old_counts	/mnt/raidinput2/tmp/hadziahmetovic/input/STEM_UNBIASED_FR200_RL100/pdata.txt	/mnt/raidtmp/hadziahmetovic/empires_2021/output/STEM_UNBIASED_FR200_RL100_old_counts	/mnt/raidtmp/hadziahmetovic/empires_2021/input/STEM_UNBIASED_FR200_RL100_old_counts

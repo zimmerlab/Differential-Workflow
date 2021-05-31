@@ -80,7 +80,6 @@ if [[ $# -ne 0 ]]; then
 fi
 
 
-## Run indices
 podman run --pull=always -v $index:$index -v $out:$out -v $pdata:$pdata -v $log:$log --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_bandits.sh ${params[@]}
 
 

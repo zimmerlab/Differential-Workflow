@@ -1,11 +1,4 @@
 #!/bin/bash -x
-## -x : expands variables and prints commands as they are called
-
-##
-## Requires fasta index next to fasta file
-##
-## TODO: automate the index
-##
 
 echo $@
 params=("$@")
@@ -22,7 +15,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=
-LONGOPTS=index:,pdata:,samples:,out:,nthread:,log:
+LONGOPTS=gtf:,pdata:,out:,nthread:,log:,hisat2,star,base:
 
 # -regarding ! and PIPESTATUS see above
 # -temporarily store output to be able to check for errors
@@ -37,6 +30,12 @@ fi
 # read getopt’s output this way to handle the quoting right:
 eval set -- "$PARSED"
 
+declare -A map
+declare -A paths
+
+map[hisat]=n paths[hisat]="gene.counts.hisat"
+map[star]=n paths[star]="gene.counts.star"
+
 # now enjoy the options in order and nicely split until we see --
 while true; do
     case "$1" in
@@ -44,12 +43,12 @@ while true; do
         	index="$2"
             shift 2
             ;;
-		--pdata)
-            pdata="$2"
+		--gtf)
+        	gtf="$2"
             shift 2
             ;;
-        --samples)
-            samples="$2"
+		--pdata)
+            pdata="$2"
             shift 2
             ;;
         --out)
@@ -64,6 +63,18 @@ while true; do
 			log="$2"
 			shift 2
 			;;
+		--hisat2)
+			map[hisat]=y
+			shift
+			;;
+		--star)
+			map[star]=y
+			shift
+			;;
+		--base)
+			base="$2"
+			shift 2
+			;;
         --)
             shift
             break
@@ -74,13 +85,21 @@ while true; do
     esac
 done
 
-mkdir -p $out
+! [ -f $out/labels.map ] && sed '1d' $pdata > $out/labels.map
 
-if [ "$samples" = "$out" ]; then
-	mount="-v $samples:$samples"
-else
-	mount="-v $samples:$samples -v $out:$out"
-fi
+for method in "hisat" "star"; do
 
-podman run --pull=always -v $index:$index -v $pdata:$pdata $mount  -v $log:$log \
-	--rm hadziahmetovic/rnaseq-toolkit /home/scripts/mapping_hisat.sh ${params[@]}
+	if [[ "${map[$method]}" = "y" ]]; then
+		basein=$out/${paths[$method]}
+		baseout=$out/EVAL_$method
+		mkdir -p $baseout
+
+		sed -i 's/.bam//g' $basein
+		
+		java -cp "/home/users/hadziahmetovic/1Work/EWMS/web/WEB-INF/lib/*":/home/users/hadziahmetovic/1Work/EWMS/web/WEB-INF/classes nlEmpiRe.input.MatrixInput -idfield Geneid -matrix $basein -writedistribs -od $baseout -labels $out/labels.map
+	fi
+done
+
+cp $base/generate_simul.sh $out
+cp $base/generate_reads.sh $out
+cp $base/create_variants.sh $out

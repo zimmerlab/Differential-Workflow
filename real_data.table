@@ -1,3 +1,2 @@
-dir	pdata	out	samples
-ECTO_base	/mnt/raidinput2/tmp/hadziahmetovic/empires_2021/input/ECTO_root/sample.list	/mnt/raidinput2/tmp/hadziahmetovic/empires_2021/input/ECTO_out/	/mnt/raidinput2/tmp/hadziahmetovic/empires_2021/input/ECTO_root/
-STEM_base	/mnt/raidinput2/tmp/hadziahmetovic/empires_2021/input/STEM_root/sample.list	/mnt/raidinput2/tmp/hadziahmetovic/empires_2021/input/STEM_out/	/mnt/raidinput2/tmp/hadziahmetovic/empires_2021/input/STEM_root/
+dir	paired	pdata	out	samples
+GSE76877	unpaired	/mnt/raidinput2/tmp/hadziahmetovic/empires_2021/input/GSE76877/sample.list	/mnt/raidinput2/tmp/hadziahmetovic/empires_2021/input/GSE76877_out/	/mnt/raidinput2/tmp/hadziahmetovic/empires_2021/input/GSE76877/

@@ -15,7 +15,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=
-LONGOPTS=index:,gtf:,pdata:,out:,nthread:,log:,dexseq
+LONGOPTS=index:,gtf:,pdata:,out:,nthread:,log:,dexseq,hisat2,star,contextmap,ideal,paired,unpaired
 
 # -regarding ! and PIPESTATUS see above
 # -temporarily store output to be able to check for errors
