@@ -22,7 +22,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=
-LONGOPTS=index:,pdata:,samples:,out:,nthread:,log:,strand:,hisat2,star,kallisto,salmon,contextmap,stringtie,ecc,ideal,gtf:,
+LONGOPTS=index:,pdata:,samples:,out:,nthread:,log:,strand:,hisat2,star,kallisto,salmon,contextmap,stringtie,ecc,ideal,gtf:,salmonstar,paired
 
 # -regarding ! and PIPESTATUS see above
 # -temporarily store output to be able to check for errors
@@ -88,6 +88,10 @@ while true; do
             salmon=y
             shift
             ;;
+        --salmonstar)
+            salmonstar=y
+            shift
+            ;;
         --contextmap)
             contextmap=y
             shift
@@ -104,6 +108,10 @@ while true; do
             ideal=y
             shift
             ;;
+		--paired)
+			paired=y
+			shift
+			;;
         --)
             shift
             break

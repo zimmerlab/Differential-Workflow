@@ -1,5 +1,4 @@
 #!/bin/bash -x
-## -x : expands variables and prints commands as they are called
 
 echo $@
 params=("$@")
@@ -16,7 +15,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=
-LONGOPTS=pdata:,gtf:,out:,nthread:,log:,salmon,salmonstar,kallisto
+LONGOPTS=gtf:,out:,log:,exp:,splic:,trlist:,
 
 # -regarding ! and PIPESTATUS see above
 # -temporarily store output to be able to check for errors
@@ -31,42 +30,38 @@ fi
 # read getopt’s output this way to handle the quoting right:
 eval set -- "$PARSED"
 
-pdata=- out=- gtf=- nthread=4 salmon=n salmonstar=n kallisto=n
+dexseq=n
 # now enjoy the options in order and nicely split until we see --
 while true; do
     case "$1" in
-        --pdata)
-            pdata="$2"
-            shift 2
-            ;;
 		--gtf)
         	gtf="$2"
             shift 2
             ;;
-		--out)
-        	out="$2"
+		--pdata)
+            pdata="$2"
             shift 2
             ;;
-        --nthread)
-        	nthread="$2"
+        --out)
+            out="$2"
             shift 2
-            ;;
-        --kallisto)
-            kallisto=y
-            shift
-            ;;
-        --salmon)
-            salmon=y
-            shift
-            ;;
-        --salmonstar)
-            salmonstar=y
-            shift
             ;;
 		--log)
-        	log="$2"
+			log="$2"
+			shift 2
+			;;
+		--exp)
+            exp="$2"
             shift 2
             ;;
+        --splic)
+            splic="$2"
+            shift 2
+            ;;
+		--trlist)
+			trlist="$2"
+			shift 2
+			;;
         --)
             shift
             break
@@ -77,14 +72,8 @@ while true; do
     esac
 done
 
-# handle non-option arguments
-if [[ $# -ne 0 ]]; then
-    echo "$0: empty flag detected, is this intentional?!"
-    #exit 4
-fi
 
+podman run --pull=always -v $trlist:$trlist -v $out:$out -v $gtf:$gtf -v $exp:$exp -v $splic:$splic --rm -it hadziahmetovic/empire \
+ java -cp /home/software/nlEmpiRe.jar nlEmpiRe.release.GenerateSimulatedTrCounts -transcriptsToSimulate $trlist -incounts $out/gene.counts -gtf $gtf -od $out -diffexp $exp -diffsplic $splic
 
-## Run indices
-podman run --pull=always -v $gtf:$gtf -v $out:$out -v $pdata:$pdata -v $log:$log --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_suppa2.sh ${params[@]}
-
-
+##java -cp /home/proj/software/nlEmpiRe/nlEmpiRe.jar nlEmpiRe.release.GenerateSimulatedTrCounts -transcriptsToSimulate $trlist -incounts $out/gene.counts -gtf $gtf -od $out -diffexp $exp -diffsplic $splic

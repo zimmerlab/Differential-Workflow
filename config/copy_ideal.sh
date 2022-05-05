@@ -16,7 +16,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=
-LONGOPTS=pdata:,gtf:,out:,nthread:,log:,salmon,salmonstar,kallisto
+LONGOPTS=out:,samples:,log:
 
 # -regarding ! and PIPESTATUS see above
 # -temporarily store output to be able to check for errors
@@ -31,37 +31,16 @@ fi
 # read getopt’s output this way to handle the quoting right:
 eval set -- "$PARSED"
 
-pdata=- out=- gtf=- nthread=4 salmon=n salmonstar=n kallisto=n
 # now enjoy the options in order and nicely split until we see --
 while true; do
     case "$1" in
-        --pdata)
-            pdata="$2"
-            shift 2
-            ;;
-		--gtf)
-        	gtf="$2"
-            shift 2
-            ;;
 		--out)
         	out="$2"
             shift 2
             ;;
-        --nthread)
-        	nthread="$2"
+        --samples)
+        	samples="$2"
             shift 2
-            ;;
-        --kallisto)
-            kallisto=y
-            shift
-            ;;
-        --salmon)
-            salmon=y
-            shift
-            ;;
-        --salmonstar)
-            salmonstar=y
-            shift
             ;;
 		--log)
         	log="$2"
@@ -84,7 +63,6 @@ if [[ $# -ne 0 ]]; then
 fi
 
 
-## Run indices
-podman run --pull=always -v $gtf:$gtf -v $out:$out -v $pdata:$pdata -v $log:$log --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_suppa2.sh ${params[@]}
+mkdir -p $out/IDEAL
 
-
+[ `ls -1A $out/IDEAL | wc -l` -eq 0 ] && cp $samples/*.bam $out/IDEAL || echo "IDEAL bam dir not empty, skipping copy.."

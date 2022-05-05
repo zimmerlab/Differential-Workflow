@@ -24,6 +24,8 @@ GTF=/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.
 GENOME=/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa
 GENOMEIDX=/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa.fai
 
+out="/mnt/raidtmp/hadziahmetovic/empires_2021/output/""$(basename `pwd`)"
+base=$(basename `pwd`)
 
 mkdir -p $biasdir
 mkdir -p $normaldir
@@ -57,3 +59,8 @@ java -jar /home/proj/software/nlEmpiRe/RELEASE/empires.jar generate_reads \
 
 cd $biasdir
 for bam in `ls | grep bam`; do mv $bam $bam.tmp; samtools sort -@ 8 -o $bam $bam.tmp; rm $bam.tmp; done
+cd ..
+
+[[ -f "workflow.table" ]] || echo 'label\tpdata\tout\tsamples\ttruesplic' > workflow.table
+echo ${base}_$biasdir$'\t'`pwd`"/pdata.txt"$'\t'${out}_$biasdir$'\t'`pwd`/$biasdir$'\t'`pwd`/COUNTS/diffsplic.trues >> workflow.table
+echo ${base}_$normaldir$'\t'`pwd`"/pdata.txt"$'\t'${out}_$normaldir$'\t'`pwd`/$normaldir$'\t'`pwd`/COUNTS/diffsplic.trues >> workflow.table

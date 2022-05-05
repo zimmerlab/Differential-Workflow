@@ -2,14 +2,24 @@
 
 res1=$(date +%s.%N)
 
+maxjobs=6
+counter=1
 
-for frlen in 200 400 600; do
-	for readlen in 60 100 250; do
+for readlen in 60 100 250; do
+	for frlen in 200 400 600; do
 		for sd in 40 80; do
-			./generate_reads.sh $readlen $frlen $sd > generate_reads_combined_RL${readlen}_FR${frlen}_SD${sd}.log
+			./generate_reads.sh $readlen $frlen $sd > generate_reads_combined_RL${readlen}_FR${frlen}_SD${sd}.log &
+			
+			let counter=counter+1
+			if [ $counter -gt $maxjobs ]; then
+				wait
+				counter=1
+			fi
 		done
     done
 done
+
+wait
 
 res2=$(date +%s.%N)
 dt=$(echo "$res2 - $res1" | bc)

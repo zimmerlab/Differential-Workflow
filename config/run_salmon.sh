@@ -22,7 +22,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=
-LONGOPTS=index:,pdata:,samples:,out:,nthread:,log:,
+LONGOPTS=index:,pdata:,samples:,out:,nthread:,log:,star
 
 # -regarding ! and PIPESTATUS see above
 # -temporarily store output to be able to check for errors
@@ -37,7 +37,7 @@ fi
 # read getopt’s output this way to handle the quoting right:
 eval set -- "$PARSED"
 
-bootstrap=100 fraglen=200 sd=80
+bootstrap=100 fraglen=200 sd=80 star=n
 # now enjoy the options in order and nicely split until we see --
 while true; do
     case "$1" in
@@ -56,6 +56,10 @@ while true; do
         --out)
             out="$2"
             shift 2
+            ;;
+        --star)
+            star=y
+            shift
             ;;
         --nthread)
             nthread="$2"

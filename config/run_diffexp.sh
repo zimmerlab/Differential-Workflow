@@ -16,7 +16,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=
-LONGOPTS=pdata:,gtf:,out:,nthread:,log:,salmon,salmonstar,kallisto
+LONGOPTS=pdata:,index:,out:,nthread:,log:,hisat2,star,contextmap,ideal,
 
 # -regarding ! and PIPESTATUS see above
 # -temporarily store output to be able to check for errors
@@ -31,7 +31,10 @@ fi
 # read getopt’s output this way to handle the quoting right:
 eval set -- "$PARSED"
 
-pdata=- out=- gtf=- nthread=4 salmon=n salmonstar=n kallisto=n
+declare -A map
+
+pdata=- out=- index=- nthread=4 map[hisat]=n map[star]=n
+map[contextmap]=n map[ideal]=n
 # now enjoy the options in order and nicely split until we see --
 while true; do
     case "$1" in
@@ -39,8 +42,8 @@ while true; do
             pdata="$2"
             shift 2
             ;;
-		--gtf)
-        	gtf="$2"
+		--index)
+        	index="$2"
             shift 2
             ;;
 		--out)
@@ -51,21 +54,25 @@ while true; do
         	nthread="$2"
             shift 2
             ;;
-        --kallisto)
-            kallisto=y
-            shift
-            ;;
-        --salmon)
-            salmon=y
-            shift
-            ;;
-        --salmonstar)
-            salmonstar=y
-            shift
-            ;;
 		--log)
         	log="$2"
             shift 2
+            ;;
+	    --hisat2)
+            map[hisat]=y
+            shift
+            ;;
+        --star)
+            map[star]=y
+            shift
+            ;;
+        --contextmap)
+            map[contextmap]=y
+            shift
+            ;;
+        --ideal)
+            map[ideal]=y
+            shift
             ;;
         --)
             shift
@@ -83,8 +90,13 @@ if [[ $# -ne 0 ]]; then
     #exit 4
 fi
 
+### set default cond pair if not given in params
+#if [[ "$condpairs" = "-" ]]; then
+#	condpairs=/home/data/cond.pairs
+#fi
 
-## Run indices
-podman run --pull=always -v $gtf:$gtf -v $out:$out -v $pdata:$pdata -v $log:$log --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_suppa2.sh ${params[@]}
+## run dexseq
+podman run --pull=always -v $index:$index -v $out:$out -v $pdata:$pdata -v $log:$log --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/de_rseq.sh ${params[@]}
 
-
+#podman run -v $index:/home/data/indices -v $outdir:/home/data/out -v $pdata:$pdata --rm -it hadziahmetovic/splicing-main:latest /home/scripts/dexAna.R $pdata /home/data/out/COUNTS/DEXSeq_HTcounts $condpairs /home/data/indices/DEXSeq/annot.noaggregate.gtf /home/data/out/diff_splicing_outs
+#$dexseq_script $pData $outDir/COUNTS/DEXSeq_HTcounts $condPairs /home/indices/DEXSeq/$indexAppendix/annot.noaggregate.gtf $outDir/diff_splicing_outs

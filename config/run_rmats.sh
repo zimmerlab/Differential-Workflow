@@ -156,7 +156,7 @@ if [[ "$readlength" = "0" ]]; then
 fi
 
 #rMATS	TODO add rmats mapping
-for method in "hisat" "star" "contextmap" "ideal"; do
+for method in "hisat" "star" "contextmap" "ideal" "rmats"; do
 
 	if [[ "${map[$method]}" = "y" ]]; then
 		mkdir -p $out/diff_splicing_outs/rMATS_$method

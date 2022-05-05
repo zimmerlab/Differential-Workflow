@@ -4,7 +4,8 @@
 		<constants>
 			<const name="WATCHDOG">/home/proj/software/watchdog</const>
 			<const name="BASE">/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow</const>
-			<const name="INPUT_TABLE">${BASE}/sample.table.kempkes</const>
+			<!--const name="INPUT_TABLE">${BASE}/sample.table.kempkes</const-->
+		<const name="INPUT_TABLE">/mnt/raidproj/proj/projekte/expressionlab/DiffSplicingBenchmark/Gergely_tests/ECTO_HISAT_REP4/workflow.table</const>
 			<const name="LOGDIR">${BASE}/LOG</const>
 			<const name="INDEXDIR">/mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103</const>
 			<!--const name="SAMPLEDIR">${BASE}/samples</const -->
@@ -17,8 +18,10 @@
 		<executors>
 			<sge name="cluster_low" default="true" maxRunning="8" slots="1" memory="80000M" />  <!--queue="dell.q"-->
 			<sge name="indexing" maxRunning="1" slots="1" memory="160000M" queue="dell256.q"/>
-			<sge name="emp" maxRunning="20" slots="16" memory="50000M"/>
-			<sge name="star" maxRunning="5" slots="16" memory="105000M"/>
+			<sge name="emp" maxRunning="5" slots="1" memory="70000M"/>
+			<sge name="star" maxRunning="5" slots="1" memory="105000M"/>
+			<sge name="ideal" maxRunning="5" slots="1" memory="5000M"/>
+			<sge name="default" maxRunning="10" slots="1" memory="50000M"/>
 
 			<!-- not working yet with this image (wrong shebang as no /bin/bash in image...) -->
 			<!-- <sge name="cluster_low_podman" default="true" maxRunning="8" slots="1" memory="2048M" queue="hpclient.q" container="docker" shebang="#!/usr/bin/env bash"/> -->	
@@ -27,7 +30,7 @@
 
 		<processBlock>
 			<processInput name="input_block" />
-			<processTable name="table" table="${INPUT_TABLE}"/>
+			<processTable name="table" table="${INPUT_TABLE}" compareName="label"/>
 		</processBlock>
 	</settings>
 	<!-- TODO: modify -->
@@ -49,9 +52,9 @@
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="2" name="star" executor="star" processBlock="table">
+		<scriptCallerTask id="2" name="S" executor="star" processBlock="table">
 			<dependencies>
-				<depends separate="true">1</depends>
+				<depends>1</depends>
 			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_star.sh</script>
@@ -69,9 +72,22 @@
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="3" name="hisat" executor="emp" processBlock="table">
+		<scriptCallerTask id="3" name="ID" executor="ideal" processBlock="table">
+			<parameter>
+				<script>${BASE}/config/copy_ideal.sh</script>
+					<param>samples:{$samples}</param>
+					<param>out:{$out}</param>
+					<param>log:${LOGDIR}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/ideal_{$label}.out</stdout>
+				<stderr>${LOGDIR}/ideal_{$label}.err</stderr>
+			</streams>
+		</scriptCallerTask>
+
+		<scriptCallerTask id="4" name="H2" executor="default" processBlock="table">
 			<dependencies>
-				<depends separate="true">1</depends>
+				<depends>1</depends>
 			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_hisat.sh</script>
@@ -88,9 +104,29 @@
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="4" name="kallisto" executor="emp" processBlock="table">
+		<scriptCallerTask id="5" name="Sa" executor="default" processBlock="table">
 			<dependencies>
-				<depends separate="true">1</depends>
+				<depends separate="true">2</depends>
+			</dependencies>
+			<parameter>
+				<script>${BASE}/config/run_salmon.sh</script>
+					<param>index:${INDEXDIR}</param>
+					<param>pdata:{$pdata}</param>
+					<param>samples:{$samples}</param>
+					<param>out:{$out}</param>
+					<param>nthread:${NTHREAD}</param>
+					<param>star</param>
+					<param>log:${LOGDIR}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/salmon_{$label}.out</stdout>
+				<stderr>${LOGDIR}/salmon_{$label}.err</stderr>
+			</streams>
+		</scriptCallerTask>
+
+		<scriptCallerTask id="6" name="K" executor="default" processBlock="table">
+			<dependencies>
+				<depends>1</depends>
 			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_kallisto.sh</script>
@@ -108,31 +144,13 @@
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="5" name="salmon" executor="emp" processBlock="table">
-			<dependencies>
-				<depends separate="true">2</depends>
-			</dependencies>
-			<parameter>
-				<script>${BASE}/config/run_salmon.sh</script>
-					<param>index:${INDEXDIR}</param>
-					<param>pdata:{$pdata}</param>
-					<param>samples:{$samples}</param>
-					<param>out:{$out}</param>
-					<param>nthread:${NTHREAD}</param>
-					<param>log:${LOGDIR}</param>
-			</parameter>
-			<streams>
-				<stdout>${LOGDIR}/salmon_{$label}.out</stdout>
-				<stderr>${LOGDIR}/salmon_{$label}.err</stderr>
-			</streams>
-		</scriptCallerTask>
-
-		<scriptCallerTask id="6" name="emp" executor="emp" processBlock="table">
+		<scriptCallerTask id="7" name="E" executor="emp" processBlock="table">
 			<dependencies>
 				<depends separate="true">2</depends>
 				<depends separate="true">3</depends>
 				<depends separate="true">4</depends>
 				<depends separate="true">5</depends>
+				<depends separate="true">6</depends>
 			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_empires.sh</script>
@@ -147,6 +165,7 @@
 					<param>star</param>
 					<param>kallisto</param>
 					<param>salmon</param>
+					<param>salmonstar</param>
 					<param>ecc</param>
 					<!--param>contextmap</param-->
 					<param>ideal</param>
@@ -158,10 +177,10 @@
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="7" name="bnd" processBlock="table" executor="emp">
+		<scriptCallerTask id="8" name="BND" processBlock="table" executor="default">
 			<dependencies>
-				<depends separate="true">4</depends>
 				<depends separate="true">5</depends>
+				<depends separate="true">6</depends>
 			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_bandits.sh</script>
@@ -171,18 +190,19 @@
 				<param>nthread:${NTHREAD}</param>
 				<param>log:${LOGDIR}</param>
 				<param>salmon</param>
-				<param>kallisto</param>
+				<param>salmonstar</param>
+				<!--param>kallisto</param-->
 			</parameter>
 			<streams>
-				<stdout>${LOGDIR}/bandits.{$label}.out</stdout>
-				<stderr>${LOGDIR}/bandits.{$label}.err</stderr>
+				<stdout>${LOGDIR}/bandits_{$label}.out</stdout>
+				<stderr>${LOGDIR}/bandits_{$label}.err</stderr>
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="8" name="suppa" processBlock="table" executor="emp">
+		<scriptCallerTask id="9" name="S2" processBlock="table" executor="default">
 			<dependencies>
-				<depends separate="true">4</depends>
 				<depends separate="true">5</depends>
+				<depends separate="true">6</depends>
 			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_suppa.sh</script>
@@ -191,17 +211,20 @@
 				<param>gtf:${GTF}</param>
 				<param>nthread:${NTHREAD}</param>
 				<param>log:${LOGDIR}</param>
+				<param>salmon</param>
+				<param>salmonstar</param>
+				<param>kallisto</param>
 			</parameter>
 			<streams>
-				<stdout>${LOGDIR}/suppa.{$label}.out</stdout>
-				<stderr>${LOGDIR}/suppa.{$label}.err</stderr>
+				<stdout>${LOGDIR}/suppa_{$label}.out</stdout>
+				<stderr>${LOGDIR}/suppa_{$label}.err</stderr>
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="9" name="drm" processBlock="table" executor="emp">
+		<scriptCallerTask id="10" name="D" processBlock="table" executor="default">
 			<dependencies>
-				<depends separate="true">4</depends>
 				<depends separate="true">5</depends>
+				<depends separate="true">6</depends>
 			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_drimseq.sh</script>
@@ -214,15 +237,16 @@
 				<param>kallisto</param>
 			</parameter>
 			<streams>
-				<stdout>${LOGDIR}/drimseq.{$label}.out</stdout>
-				<stderr>${LOGDIR}/drimseq.{$label}.err</stderr>
+				<stdout>${LOGDIR}/drimseq_{$label}.out</stdout>
+				<stderr>${LOGDIR}/drimseq_{$label}.err</stderr>
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="10" name="rmats" processBlock="table" executor="emp">
+		<scriptCallerTask id="11" name="rM" processBlock="table" executor="default">
 			<dependencies>
 				<depends separate="true">2</depends>
 				<depends separate="true">3</depends>
+				<depends separate="true">4</depends>
 			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_rmats.sh</script>
@@ -240,14 +264,16 @@
 				<param>rmats</param>
 			</parameter>
 			<streams>
-				<stdout>${LOGDIR}/rmats.{$label}.out</stdout>
-				<stderr>${LOGDIR}/rmats.{$label}.err</stderr>
+				<stdout>${LOGDIR}/rmats_{$label}.out</stdout>
+				<stderr>${LOGDIR}/rmats_{$label}.err</stderr>
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="11" name="fC" executor="emp" processBlock="table">
+		<scriptCallerTask id="12" name="fC" executor="default" processBlock="table">
 			<dependencies>
+				<depends separate="true">2</depends>
 				<depends separate="true">3</depends>
+				<depends separate="true">4</depends>
 			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_featureCounts.sh</script>
@@ -255,7 +281,10 @@
 					<param>gtf:${GTF}</param>
 					<param>pdata:{$pdata}</param>
 					<param>out:{$out}</param>
-					<param>dexseq:</param>
+					<param>dexseq</param>
+					<param>hisat2</param>
+					<param>star</param>
+					<param>ideal</param>
 					<param>nthread:${NTHREAD}</param>
 					<param>log:${LOGDIR}</param>
 			</parameter>
@@ -265,9 +294,9 @@
 			</streams>
 		</scriptCallerTask>
 
-		<scriptCallerTask id="12" name="dex" processBlock="table" executor="emp">
+		<scriptCallerTask id="13" name="DX" processBlock="table" executor="default">
 			<dependencies>
-				<depends separate="true">11</depends>
+				<depends separate="true">12</depends>
 			</dependencies>
 			<parameter>
 				<script>${BASE}/config/run_dexseq.sh</script>
@@ -277,16 +306,60 @@
 				<param>nthread:${NTHREAD}</param>
 				<param>log:${LOGDIR}</param>
 				<param>star</param>
-				<param>hisat</param>
+				<param>hisat2</param>
 					<!--param>contextmap</param-->
 				<param>ideal</param>
 			</parameter>
 			<streams>
-				<stdout>${LOGDIR}/dexseq.{$label}.out</stdout>
-				<stderr>${LOGDIR}/dexseq.{$label}.err</stderr>
+				<stdout>${LOGDIR}/dexseq_{$label}.out</stdout>
+				<stderr>${LOGDIR}/dexseq_{$label}.err</stderr>
 			</streams>
 		</scriptCallerTask>
 
+
+		<scriptCallerTask id="14" name="DE" processBlock="table" executor="default">
+			<dependencies>
+				<depends separate="true">12</depends>
+			</dependencies>
+			<parameter>
+				<script>${BASE}/config/run_diffexp.sh</script>
+				<param>index:${INDEXDIR}</param>
+				<param>pdata:{$pdata}</param>
+				<param>out:{$out}</param>
+				<param>nthread:${NTHREAD}</param>
+				<param>log:${LOGDIR}</param>
+				<param>star</param>
+				<param>hisat2</param>
+					<!--param>contextmap</param-->
+				<param>ideal</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/dexseq_{$label}.out</stdout>
+				<stderr>${LOGDIR}/dexseq_{$label}.err</stderr>
+			</streams>
+		</scriptCallerTask>
+
+
+		<scriptCallerTask id="15" name="end" processBlock="table" executor="default">
+			<dependencies>
+				<depends separate="true">7</depends>
+				<depends separate="true">8</depends>
+				<depends separate="true">9</depends>
+				<depends separate="true">10</depends>
+				<depends separate="true">11</depends>
+				<depends separate="true">12</depends>
+				<depends separate="true">13</depends>
+			</dependencies>
+			<parameter>
+				<script>/home/users/hadziahmetovic/bin/differential-eval</script>
+				<param>resultdir:{$out}/diff_splicing_outs</param>
+				<param>truesplic:{$truesplic}</param>
+			</parameter>
+			<streams>
+				<stdout>${LOGDIR}/eval_{$label}.out</stdout>
+				<stderr>${LOGDIR}/eval_{$label}.err</stderr>
+			</streams>
+		</scriptCallerTask>
 
 		<!-- scriptCallerTask id="2" name="convert" processBlock="table">
 			<parameter>

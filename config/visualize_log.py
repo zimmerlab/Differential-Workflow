@@ -56,5 +56,5 @@ for i, pid in enumerate(df.PID.unique()):
 
 plt.tight_layout()
 
-plt.savefig('plot.pdf')
-
+out = sys.argv[2] or "plot.pdf"
+plt.savefig(out)

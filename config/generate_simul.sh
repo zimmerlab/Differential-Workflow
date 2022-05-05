@@ -17,7 +17,7 @@ GENOMEIDX=/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh3
 mkdir -p COUNTS
 day=`date +'%Y.%m.%d'`
 MINL=600
-incounts=${$1:-"gene.counts"}
+incounts=${${1}:-"gene.counts"}
 NPAIRS=5000
 NTRUEDIFFSPLIC=1300
 NTRUEDIFFEXP_MULTITR=1000
