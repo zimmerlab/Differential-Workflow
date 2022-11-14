@@ -5,7 +5,7 @@
 			<const name="WATCHDOG">/home/proj/software/watchdog</const>
 			<const name="BASE">/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow</const>
 			<!--const name="INPUT_TABLE">${BASE}/sample.table.kempkes</const-->
-		<const name="INPUT_TABLE">/mnt/raidproj/proj/projekte/expressionlab/DiffSplicingBenchmark/Gergely_tests/ECTO_HISAT_REP4/workflow.table</const>
+			<const name="INPUT_TABLE">/mnt/raidproj/proj/projekte/expressionlab/DiffSplicingBenchmark/HMEC_D2/workflow.table.reduced</const>
 			<const name="LOGDIR">${BASE}/LOG</const>
 			<const name="INDEXDIR">/mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103</const>
 			<!--const name="SAMPLEDIR">${BASE}/samples</const -->
@@ -189,9 +189,9 @@
 				<param>out:{$out}</param>
 				<param>nthread:${NTHREAD}</param>
 				<param>log:${LOGDIR}</param>
-				<param>salmon</param>
-				<param>salmonstar</param>
-				<!--param>kallisto</param-->
+				<!--param>salmon</param>
+				<param>salmonstar</param-->
+				<param>kallisto</param>
 			</parameter>
 			<streams>
 				<stdout>${LOGDIR}/bandits_{$label}.out</stdout>

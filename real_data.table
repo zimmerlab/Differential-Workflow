@@ -1,2 +1,2 @@
 dir	paired	pdata	out	samples
-GSE76877	unpaired	/mnt/raidinput2/tmp/hadziahmetovic/empires_2021/input/GSE76877/sample.list	/mnt/raidinput2/tmp/hadziahmetovic/empires_2021/input/GSE76877_out/	/mnt/raidinput2/tmp/hadziahmetovic/empires_2021/input/GSE76877/
+Nini	paired	/mnt/raidinput/input/own/projekte/kempkes/KEMPKES/samples_new/samples.list	/mnt/raidinput/input/own/projekte/kempkes/KEMPKES/samples_new	/mnt/raidinput/input/own/projekte/kempkes/KEMPKES/samples_new
