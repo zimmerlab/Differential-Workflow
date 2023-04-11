@@ -5,23 +5,25 @@
 			<const name="WATCHDOG">/home/proj/software/watchdog</const>
 			<const name="BASE">/mnt/raidinput2/tmp/hadziahmetovic/DiffSplicing-workflow</const>
 			<!--const name="INPUT_TABLE">${BASE}/sample.table.kempkes</const-->
-			<const name="INPUT_TABLE">/mnt/raidproj/proj/projekte/expressionlab/DiffSplicingBenchmark/HMEC_D2/workflow.table.reduced</const>
-			<const name="LOGDIR">${BASE}/LOG</const>
+			<!--const name="INPUT_TABLE">/mnt/raidproj/proj/projekte/expressionlab/DiffSplicingBenchmark/HMEC_D2/workflow.table.reduced</const-->
+			<const name="INPUT_TABLE">/mnt/raidproj/proj/projekte/expressionlab/DiffSplicingBenchmark/runtime.eval.table</const>
+
+			<const name="LOGDIR">/mnt/raidinput/input/own/projekte/kempkes/runtime/LOG</const>
 			<const name="INDEXDIR">/mnt/raidinput2/tmp/hadziahmetovic/index/Homo_sapiens.GRCh38.103</const>
 			<!--const name="SAMPLEDIR">${BASE}/samples</const -->
 			<const name="GTF">/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.103.gtf</const>
 			<const name="FASTA">/mnt/raidinput2/tmp/hadziahmetovic/index/annotation/Homo_sapiens.GRCh38.dna.primary_assembly.fa</const>
-			<const name="NTHREAD">16</const>
+			<const name="NTHREAD">8</const>
 		</constants>
 
 
 		<executors>
 			<sge name="cluster_low" default="true" maxRunning="8" slots="1" memory="80000M" />  <!--queue="dell.q"-->
-			<sge name="indexing" maxRunning="1" slots="1" memory="160000M" queue="dell256.q"/>
-			<sge name="emp" maxRunning="5" slots="1" memory="70000M"/>
-			<sge name="star" maxRunning="5" slots="1" memory="105000M"/>
-			<sge name="ideal" maxRunning="5" slots="1" memory="5000M"/>
-			<sge name="default" maxRunning="10" slots="1" memory="50000M"/>
+			<sge name="indexing" maxRunning="1" slots="1" memory="160000M" queue="dell.q"/>
+			<sge name="emp" maxRunning="5" slots="1" memory="70000M" queue="dell.q,dell256.q"/>
+			<sge name="star" maxRunning="5" slots="1" memory="80000M" queue="dell.q,dell256.q"/>
+			<sge name="ideal" maxRunning="5" slots="1" memory="5000M" queue="dell.q,dell256.q"/>
+			<sge name="default" maxRunning="10" slots="1" memory="70000M" queue="dell.q,dell256.q"/>
 
 			<!-- not working yet with this image (wrong shebang as no /bin/bash in image...) -->
 			<!-- <sge name="cluster_low_podman" default="true" maxRunning="8" slots="1" memory="2048M" queue="hpclient.q" container="docker" shebang="#!/usr/bin/env bash"/> -->	
@@ -170,6 +172,7 @@
 					<!--param>contextmap</param-->
 					<param>ideal</param>
 					<param>strand:true</param>
+					<param>paired</param>
 			</parameter>
 			<streams>
 				<stdout>${LOGDIR}/empires_{$label}.out</stdout>
@@ -189,8 +192,8 @@
 				<param>out:{$out}</param>
 				<param>nthread:${NTHREAD}</param>
 				<param>log:${LOGDIR}</param>
-				<!--param>salmon</param>
-				<param>salmonstar</param-->
+				<param>salmon</param>
+				<param>salmonstar</param>
 				<param>kallisto</param>
 			</parameter>
 			<streams>
@@ -234,6 +237,7 @@
 				<param>nthread:${NTHREAD}</param>
 				<param>log:${LOGDIR}</param>
 				<param>salmon</param>
+				<param>salmonstar</param>
 				<param>kallisto</param>
 			</parameter>
 			<streams>
