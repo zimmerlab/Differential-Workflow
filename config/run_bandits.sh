@@ -85,5 +85,3 @@ fi
 
 
 podman run --pull=always -v $index:$index -v $out:$out -v $pdata:$pdata -v $log:$log --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_bandits.sh ${params[@]}
-
-

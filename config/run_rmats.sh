@@ -123,6 +123,7 @@ fi
 conds=()
 
 base=$out/rMATS
+dir=$(basename $out)
 mkdir -p $base
 rm -f $base/*
 
@@ -162,12 +163,14 @@ for method in "hisat" "star" "contextmap" "ideal" "rmats"; do
 		mkdir -p $out/diff_splicing_outs/rMATS_$method
 
 		#watch pidstat -dru -hl >> $log/rmats_$method-$(date +%s).pidstat & wid=$!
+		wid="$(date +%s)"
 
 		( [ -f "$out/diff_splicing_outs/rMATS_$method/SE.MATS.JC.txt" ] && echo "[INFO] [rMATS] $out/diff_splicing_outs/rMATS_$method/SE.MATS.JC.txt already exists, skipping.."$'\n' ) \
 			|| ($rmats_call --b1 $out/rMATS/${conds[0]}.$method.samples --b2 $out/rMATS/${conds[1]}.$method.samples \
 				--gtf $gtf -t paired --nthread $nthread --od $out/diff_splicing_outs/rMATS_$method --readLength $readlength --tmp /tmp)
 
 		#kill -15 $wid
+		echo "$(($(date +%s)-$wid))" >> $log/rmats_${dir}_${method}.$(date +%s).runtime
 	fi
 done
  	#-t paired --libType fr-unstranded --readLength $readLength --gtf $gtf --od $outDir/diff_splicing_outs/rMATS --nthread $nthreads )

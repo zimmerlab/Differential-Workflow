@@ -16,7 +16,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=
-LONGOPTS=pdata:,index:,out:,nthread:,log:,salmon,kallisto
+LONGOPTS=pdata:,index:,out:,nthread:,log:,salmon,salmonstar,kallisto
 
 # -regarding ! and PIPESTATUS see above
 # -temporarily store output to be able to check for errors
@@ -31,7 +31,7 @@ fi
 # read getopt’s output this way to handle the quoting right:
 eval set -- "$PARSED"
 
-pdata=- out=- index=- nthread=4 salmon=n kallisto=n
+pdata=- out=- index=- nthread=4 salmon=n salmonstar=n kallisto=n
 # now enjoy the options in order and nicely split until we see --
 while true; do
     case "$1" in
@@ -59,6 +59,10 @@ while true; do
             salmon=y
             shift
             ;;
+        --salmonstar)
+            salmonstar=y
+            shift
+            ;;
         --kallisto)
             kallisto=y
             shift
@@ -80,7 +84,4 @@ if [[ $# -ne 0 ]]; then
 fi
 
 
-## Run indices
 podman run --pull=always -v $index:$index -v $out:$out -v $pdata:$pdata -v $log:$log --rm -it hadziahmetovic/rnaseq-toolkit /home/scripts/das_drimseq.sh ${params[@]}
-
-
